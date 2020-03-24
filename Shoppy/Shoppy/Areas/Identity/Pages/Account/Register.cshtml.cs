@@ -23,8 +23,7 @@ namespace Shoppy.Areas.Identity.Pages.Account
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
-        //private List<SelectListItem> roles;
+        private readonly IEmailSender _emailSender;     
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -37,14 +36,13 @@ namespace Shoppy.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
 
-            //roles = new List<SelectListItem>
-            //{
-            //    new SelectListItem {Value = "Seller", Text ="Seller"},
-            //    new SelectListItem {Value = "Buyer", Text = "Buyer"},
-            //};
+            Roles = new List<SelectListItem>
+            {
+                new SelectListItem {Value = "Seller", Text ="Seller"},
+                new SelectListItem {Value = "Buyer", Text = "Buyer"},
+            };
 
 
-            //if adding new roles change startup.cs
         }
 
         [BindProperty]
@@ -79,9 +77,9 @@ namespace Shoppy.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            //[Required]
-            //[Display(Name = "UserRole")]
-            //public string UserRole { get; set; }
+            [Required]
+            [Display(Name = "UserRole")]
+            public string UserRole { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -113,6 +111,8 @@ namespace Shoppy.Areas.Identity.Pages.Account
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
+                    await _userManager.AddToRoleAsync(user, Input.UserRole);
+
                     if(_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
@@ -127,6 +127,8 @@ namespace Shoppy.Areas.Identity.Pages.Account
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+
+
             }
 
             // If we got this far, something failed, redisplay form
