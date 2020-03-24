@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
@@ -23,6 +24,7 @@ namespace Shoppy.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        //private List<SelectListItem> roles;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -34,6 +36,15 @@ namespace Shoppy.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+
+            //roles = new List<SelectListItem>
+            //{
+            //    new SelectListItem {Value = "Seller", Text ="Seller"},
+            //    new SelectListItem {Value = "Buyer", Text = "Buyer"},
+            //};
+
+
+            //if adding new roles change startup.cs
         }
 
         [BindProperty]
@@ -42,6 +53,8 @@ namespace Shoppy.Areas.Identity.Pages.Account
         public string ReturnUrl { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
+
+        public List<SelectListItem> Roles { get; }
 
         public class InputModel
         {
@@ -65,6 +78,10 @@ namespace Shoppy.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            //[Required]
+            //[Display(Name = "UserRole")]
+            //public string UserRole { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -77,11 +94,11 @@ namespace Shoppy.Areas.Identity.Pages.Account
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.UserName, Email = Input.Email,};
+                var user = new IdentityUser { UserName = Input.UserName, Email = Input.Email, };
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                if (result.Succeeded)
+                if(result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
@@ -96,7 +113,7 @@ namespace Shoppy.Areas.Identity.Pages.Account
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                    if(_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
                     }
@@ -106,7 +123,7 @@ namespace Shoppy.Areas.Identity.Pages.Account
                         return LocalRedirect(returnUrl);
                     }
                 }
-                foreach (var error in result.Errors)
+                foreach(var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
