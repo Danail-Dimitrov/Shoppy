@@ -19,13 +19,11 @@ namespace Shoppy.Controllers
             _logger = logger;
         }
 
-        [Authorize(Roles = "Seller")]
         public IActionResult Index()
         {
             return View();
         }
 
-        [Authorize(Roles = "Buyer")]
         public IActionResult Privacy()
         {
             return View();
