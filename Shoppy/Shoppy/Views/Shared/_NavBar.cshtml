@@ -19,7 +19,7 @@
                     @if(User.IsInRole("Seller"))
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Seller" asp-action="Index">Test</a>
+                            <a class="nav-link text-dark" asp-area="Seller" asp-controller="Seller" asp-action="Index">SellerHome</a>
                         </li>
                     }
                     else if(User.IsInRole("Buyer"))

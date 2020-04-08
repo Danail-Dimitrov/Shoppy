@@ -62,17 +62,22 @@ namespace Shoppy
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                   name: "areaRoute",
+                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
 
-                UserManager<IdentityUser> userManager = services.GetRequiredService<UserManager<IdentityUser>>();
-
-                CreateRoles(services).Wait();
-                CreateAdminUser(userManager).Wait();
-                CreateSellerUser(userManager).Wait();
-                CreateBuyerUser(userManager).Wait();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();               
             });
+
+            UserManager<IdentityUser> userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+
+            CreateRoles(services).Wait();
+            CreateAdminUser(userManager).Wait();
+            CreateSellerUser(userManager).Wait();
+            CreateBuyerUser(userManager).Wait();
         }
 
         private async Task CreateRoles(IServiceProvider serviceProvider)

@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+}
+
+
+<h1>Hello @User.Identity.Name</h1>
+<p>Use the menu below or the navigation bar to navigate the site</p>
+<ul>
+    <li>
+        <a style="color:red" class="nav-link" asp-controller="SellerProduct" asp-action="Index">Test</a>
+    </li>
+</ul>
+
