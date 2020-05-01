@@ -12,6 +12,7 @@ using Shoppy.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Shoppy.Models.DBEntities;
 
 namespace Shoppy
 {
@@ -30,11 +31,20 @@ namespace Shoppy
             services.AddDbContext<ApplicationDbContext>(options =>
              options.UseMySql(
                  Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            //services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
+            //    .AddEntityFrameworkStores<ApplicationDbContext>()
+            //    //.AddRoles<IdentityRole<int>>()
+            //    .AddDefaultUI()
+            //    .AddDefaultTokenProviders();
+
+            services.AddIdentity<User, UserRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultUI()
+                .AddDefaultTokenProviders();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,10 +79,10 @@ namespace Shoppy
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();               
+                endpoints.MapRazorPages();
             });
 
-            UserManager<IdentityUser> userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+            UserManager<User> userManager = services.GetRequiredService<UserManager<User>>();
 
             CreateRoles(services).Wait();
             CreateAdminUser(userManager).Wait();
@@ -83,7 +93,7 @@ namespace Shoppy
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
             //if changing roles change register.cshtm and register.cshtml.cs
-            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();            
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<UserRole>>();
             string[] roles = { "Admin", "Seller", "Buyer" };
             IdentityResult roleResult;
 
@@ -93,34 +103,36 @@ namespace Shoppy
                 if(!roleCheck)
                 {
                     //here in this line we are creating a role and seed it to the database
-                    roleResult = await RoleManager.CreateAsync(new IdentityRole(role));
+                    roleResult = await RoleManager.CreateAsync(new UserRole(role));
                 }
-            }           
+            }
         }
 
-        private async Task CreateAdminUser(UserManager<IdentityUser> userManager)
-        {            
-            IdentityUser user = await userManager.FindByEmailAsync(Configuration.GetSection("AdminSettings")["AdminEmail"]);
+        private async Task CreateAdminUser(UserManager<User> userManager)
+        {
+            User user = await userManager.FindByEmailAsync(Configuration.GetSection("AdminSettings")["AdminEmail"]);
             if(user == null)
             {
-                var adminUser = new IdentityUser {
+                var adminUser = new User
+                {
                     UserName = Configuration.GetSection("AdminSettings")["AdminUserName"],
                     Email = Configuration.GetSection("AdminSettings")["AdminEmail"],
                     EmailConfirmed = true,
                     PhoneNumber = Configuration.GetSection("AdminSettings")["AdminPhoneNumber"],
-                    PhoneNumberConfirmed = true };
+                    PhoneNumberConfirmed = true
+                };
                 var result = await userManager.CreateAsync(adminUser, Configuration.GetSection("AdminSettings")["AdminPassword"]);
 
                 await userManager.AddToRoleAsync(adminUser, "Admin");
             }
         }
 
-        private async Task CreateSellerUser(UserManager<IdentityUser> userManager)
+        private async Task CreateSellerUser(UserManager<User> userManager)
         {
-            IdentityUser user = await userManager.FindByEmailAsync(Configuration.GetSection("SellerSettings")["SellerEmail"]);
+            User user = await userManager.FindByEmailAsync(Configuration.GetSection("SellerSettings")["SellerEmail"]);
             if(user == null)
             {
-                var adminUser = new IdentityUser
+                var adminUser = new User
                 {
                     UserName = Configuration.GetSection("SellerSettings")["SellerUserName"],
                     Email = Configuration.GetSection("SellerSettings")["SellerEmail"],
@@ -134,12 +146,12 @@ namespace Shoppy
             }
         }
 
-        private async Task CreateBuyerUser(UserManager<IdentityUser> userManager)
+        private async Task CreateBuyerUser(UserManager<User> userManager)
         {
-            IdentityUser user = await userManager.FindByEmailAsync(Configuration.GetSection("BuyerSettings")["BuyerEmail"]);
+            User user = await userManager.FindByEmailAsync(Configuration.GetSection("BuyerSettings")["BuyerEmail"]);
             if(user == null)
             {
-                var adminUser = new IdentityUser
+                var adminUser = new User
                 {
                     UserName = Configuration.GetSection("BuyerSettings")["BuyerUserName"],
                     Email = Configuration.GetSection("BuyerSettings")["BuyerEmail"],
@@ -154,4 +166,3 @@ namespace Shoppy
         }
     }
 }
- 
