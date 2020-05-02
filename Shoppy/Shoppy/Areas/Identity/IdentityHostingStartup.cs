@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shoppy.Data;
+using Shoppy.Models.DBEntities;
 
 [assembly: HostingStartup(typeof(Shoppy.Areas.Identity.IdentityHostingStartup))]
 namespace Shoppy.Areas.Identity
