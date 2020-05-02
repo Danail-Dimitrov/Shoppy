@@ -14,20 +14,21 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Shoppy.Models.DBEntities;
 
 namespace Shoppy.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;     
+        private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
@@ -41,8 +42,6 @@ namespace Shoppy.Areas.Identity.Pages.Account
                 new SelectListItem {Value = "Seller", Text ="Seller"},
                 new SelectListItem {Value = "Buyer", Text = "Buyer"},
             };
-
-
         }
 
         [BindProperty]
@@ -92,11 +91,11 @@ namespace Shoppy.Areas.Identity.Pages.Account
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.UserName, Email = Input.Email, };
+                var user = new User { UserName = Input.UserName, Email = Input.Email, };
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                if(result.Succeeded)
+                if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
@@ -113,7 +112,7 @@ namespace Shoppy.Areas.Identity.Pages.Account
 
                     await _userManager.AddToRoleAsync(user, Input.UserRole);
 
-                    if(_userManager.Options.SignIn.RequireConfirmedAccount)
+                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
                     }
@@ -123,12 +122,10 @@ namespace Shoppy.Areas.Identity.Pages.Account
                         return LocalRedirect(returnUrl);
                     }
                 }
-                foreach(var error in result.Errors)
+                foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-
-
             }
 
             // If we got this far, something failed, redisplay form
