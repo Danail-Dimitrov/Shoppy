@@ -10,9 +10,12 @@ namespace Shoppy.Models.DBEntities
 {
     public class User : IdentityUser<int>
     {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         [Required]
         [Column(TypeName = "decimal(7, 5)")]
         public decimal Money { get; set; }
+        public bool IsDeleted { get; set; }
         public ICollection<Order> Orders { get; set; }
     }
 }

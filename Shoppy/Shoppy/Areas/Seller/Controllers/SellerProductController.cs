@@ -16,5 +16,10 @@ namespace Shoppy.Areas.Seller.Controllers
          
         }
 
+        [Area("Seller")]
+        public IActionResult AddProduct()
+        {
+            return View();
+        }
     }
 }

@@ -86,15 +86,14 @@ namespace Shoppy
 
             CreateRoles(services).Wait();
             CreateAdminUser(userManager).Wait();
-            CreateSellerUser(userManager).Wait();
-            CreateBuyerUser(userManager).Wait();
+            CreateUser(userManager).Wait();
         }
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
             //if changing roles change register.cshtm and register.cshtml.cs
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<UserRole>>();
-            string[] roles = { "Admin", "Seller", "Buyer" };
+            string[] roles = { "Admin", "SuperUser" };
             IdentityResult roleResult;
 
             foreach(var role in roles)
@@ -117,9 +116,12 @@ namespace Shoppy
                 {
                     UserName = Configuration.GetSection("AdminSettings")["AdminUserName"],
                     Email = Configuration.GetSection("AdminSettings")["AdminEmail"],
+                    FirstName = Configuration.GetSection("AdminSettings")["AdminFirstName"],
+                    LastName = Configuration.GetSection("AdminSettings")["AdminLastName"],
                     EmailConfirmed = true,
                     PhoneNumber = Configuration.GetSection("AdminSettings")["AdminPhoneNumber"],
-                    PhoneNumberConfirmed = true
+                    PhoneNumberConfirmed = true,
+                    IsDeleted = false
                 };
                 var result = await userManager.CreateAsync(adminUser, Configuration.GetSection("AdminSettings")["AdminPassword"]);
 
@@ -127,41 +129,23 @@ namespace Shoppy
             }
         }
 
-        private async Task CreateSellerUser(UserManager<User> userManager)
+        private async Task CreateUser(UserManager<User> userManager)
         {
-            User user = await userManager.FindByEmailAsync(Configuration.GetSection("SellerSettings")["SellerEmail"]);
+            User user = await userManager.FindByEmailAsync(Configuration.GetSection("UserSettings")["UserEmail"]);
             if(user == null)
             {
-                var adminUser = new User
+                var newUser = new User
                 {
-                    UserName = Configuration.GetSection("SellerSettings")["SellerUserName"],
-                    Email = Configuration.GetSection("SellerSettings")["SellerEmail"],
+                    UserName = Configuration.GetSection("UserSettings")["UserName"],
+                    FirstName = Configuration.GetSection("UserSettings")["UserFirstName"],
+                    LastName = Configuration.GetSection("UserSettings")["UserLastName"],
+                    Email = Configuration.GetSection("UserSettings")["UserEmail"],
                     EmailConfirmed = true,
-                    PhoneNumber = Configuration.GetSection("SellerSettings")["SellerPhoneNumber"],
-                    PhoneNumberConfirmed = true
+                    PhoneNumber = Configuration.GetSection("UserSettings")["UserPhoneNumber"],
+                    PhoneNumberConfirmed = true,
+                    IsDeleted = false
                 };
-                var result = await userManager.CreateAsync(adminUser, Configuration.GetSection("SellerSettings")["SellerPassword"]);
-
-                await userManager.AddToRoleAsync(adminUser, "Seller");
-            }
-        }
-
-        private async Task CreateBuyerUser(UserManager<User> userManager)
-        {
-            User user = await userManager.FindByEmailAsync(Configuration.GetSection("BuyerSettings")["BuyerEmail"]);
-            if(user == null)
-            {
-                var adminUser = new User
-                {
-                    UserName = Configuration.GetSection("BuyerSettings")["BuyerUserName"],
-                    Email = Configuration.GetSection("BuyerSettings")["BuyerEmail"],
-                    EmailConfirmed = true,
-                    PhoneNumber = Configuration.GetSection("BuyerSettings")["BuyerPhoneNumber"],
-                    PhoneNumberConfirmed = true
-                };
-                var result = await userManager.CreateAsync(adminUser, Configuration.GetSection("BuyerSettings")["BuyerPassword"]);
-
-                await userManager.AddToRoleAsync(adminUser, "Buyer");
+                var result = await userManager.CreateAsync(newUser, Configuration.GetSection("UserSettings")["UserPassword"]);
             }
         }
     }

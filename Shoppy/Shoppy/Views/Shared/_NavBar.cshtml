@@ -16,7 +16,7 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
-                    @if(User.IsInRole("Seller"))
+                    @*@if(User.IsInRole("Seller"))
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Seller" asp-controller="Seller" asp-action="Index">SellerHome</a>
@@ -26,6 +26,15 @@
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Buyer" asp-action="Index">TestB</a>
+                        </li>
+                    }*@
+                    @if(User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Selle" asp-controller="Sell" asp-action="Index">SellMenu</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Buy" asp-controller="Buy" asp-action="Index">BuyMenu</a>
                         </li>
                     }
                 </ul>

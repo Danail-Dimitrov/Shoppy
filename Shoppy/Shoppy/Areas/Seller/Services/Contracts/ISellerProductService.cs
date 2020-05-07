@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Shoppy.Data
+namespace Shoppy.Areas.Seller.Services.Contracts
 {
-    public class ShoppyContext
+    public interface ISellerProductService
     {
+
     }
 }

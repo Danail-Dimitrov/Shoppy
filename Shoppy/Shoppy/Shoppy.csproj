@@ -8,6 +8,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200501193416_Test_User_Id_type_changed.cs" />
     <Compile Remove="Migrations\20200501193416_Test_User_Id_type_changed.Designer.cs" />
+    <Compile Remove="Migrations\20200501200229_Test.cs" />
+    <Compile Remove="Migrations\20200501200229_Test.Designer.cs" />
   </ItemGroup>
 
 
