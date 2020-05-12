@@ -16,23 +16,22 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
-                    @*@if(User.IsInRole("Seller"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Seller" asp-controller="Seller" asp-action="Index">SellerHome</a>
-                        </li>
-                    }
-                    else if(User.IsInRole("Buyer"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Buyer" asp-action="Index">TestB</a>
-                        </li>
-                    }*@
                     @if(User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Selle" asp-controller="Sell" asp-action="Index">SellMenu</a>
+                            <div class="dropdown">
+                                <div class="navbar">
+                                    <span>Sell</span>
+                                </div>
+                                <div class="dropdown-content">
+                                    <a class="nav-link text-dark" asp-area="Sell" asp-controller="Sell" asp-action="Index">View your offers</a>
+                                    <a class="nav-link text-dark" asp-area="Sell" asp-controller="Sell" asp-action="Create">Create an offer</a>
+                                </div>
+                            </div>
                         </li>
+
+
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Buy" asp-controller="Buy" asp-action="Index">BuyMenu</a>
                         </li>
@@ -42,3 +41,32 @@
         </div>
     </nav>
 </header>
+
+<style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        padding: 12px 16px;
+        z-index: 1;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .navbar a {
+        float: left;
+        font-size: 16px;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+    }
+</style>

@@ -10,23 +10,36 @@
     <Compile Remove="Migrations\20200501193416_Test_User_Id_type_changed.Designer.cs" />
     <Compile Remove="Migrations\20200501200229_Test.cs" />
     <Compile Remove="Migrations\20200501200229_Test.Designer.cs" />
+    <Compile Remove="Migrations\20200506232300_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200506232300_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200509214726_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200509214726_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200509224747_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200509224747_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200512120220_FixesFKInBuyOffer1.cs" />
+    <Compile Remove="Migrations\20200512120220_FixesFKInBuyOffer1.Designer.cs" />
+    <Compile Remove="Migrations\20200512120340_FixesFKInBuyOffer1.cs" />
+    <Compile Remove="Migrations\20200512120340_FixesFKInBuyOffer1.Designer.cs" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.20" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <Folder Include="Areas\Seller\Data\" />
-    <Folder Include="Areas\Seller\Models\" />
+    <Folder Include="Areas\Sell\Data\" />
   </ItemGroup>
 
 </Project>

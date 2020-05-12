@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Shoppy.Models.DBEntities.Contracts
 {
-    public interface IOrder
+    public interface IBuyOffer
     {
         int Id { get; set; }
-        DateTime OrderPlaced { get; set; }
-        DateTime? OrderFulfielled { get; set; }
+        int OfferedMoney { get; set; }
+        int SellOfferId { get; set; }
         int UserId { get; set; }
 
-        User User { get; set; }
-        ICollection<ProductOrder> ProdcutOrders { get; set; }
+        SellOffer SellOffer { get; set; }
     }
 }

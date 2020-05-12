@@ -9,15 +9,42 @@ using Shoppy.Data;
 namespace Shoppy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200506232300_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20200512115713_Adding BuyOffer")]
+    partial class AddingBuyOffer
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.0")
+                .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
@@ -118,17 +145,79 @@ namespace Shoppy.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Shoppy.Models.DBEntities.Order", b =>
+            modelBuilder.Entity("Shoppy.Models.DBEntities.BuyOffer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("OrderFulfielled")
-                        .HasColumnType("datetime(6)");
+                    b.Property<int>("BuyerId")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("OrderPlaced")
-                        .HasColumnType("datetime(6)");
+                    b.Property<decimal>("OfferedMoney")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<int>("SellOfferId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SellOfferId");
+
+                    b.ToTable("BuyOffer");
+                });
+
+            modelBuilder.Entity("Shoppy.Models.DBEntities.ProductTag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tag")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductTags");
+                });
+
+            modelBuilder.Entity("Shoppy.Models.DBEntities.ProductTagSellOffer", b =>
+                {
+                    b.Property<int>("ProductTagId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SellOfferId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductTagId", "SellOfferId");
+
+                    b.HasIndex("SellOfferId");
+
+                    b.ToTable("ProductTagSellOffers");
+                });
+
+            modelBuilder.Entity("Shoppy.Models.DBEntities.SellOffer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("CanReciveBuyOffers")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PriceIsNegotiable")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<decimal>("ProductPrice")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("ProductTitle")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -137,52 +226,36 @@ namespace Shoppy.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Order");
+                    b.ToTable("SellOffers");
                 });
 
-            modelBuilder.Entity("Shoppy.Models.DBEntities.Product", b =>
+            modelBuilder.Entity("Shoppy.Models.DBEntities.TransactionHistory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Model")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Name")
+                    b.Property<bool>("IsProvit")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<decimal>("MoneyAmaount")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(7, 5)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Product");
-                });
-
-            modelBuilder.Entity("Shoppy.Models.DBEntities.ProductOrder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("UserId");
 
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductOrder");
+                    b.ToTable("TransactionHistories");
                 });
 
             modelBuilder.Entity("Shoppy.Models.DBEntities.User", b =>
@@ -206,6 +279,7 @@ namespace Shoppy.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<bool>("IsDeleted")
@@ -221,7 +295,7 @@ namespace Shoppy.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("Money")
-                        .HasColumnType("decimal(7, 5)");
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
@@ -262,39 +336,9 @@ namespace Shoppy.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Shoppy.Models.DBEntities.UserRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedName")
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasName("RoleNameIndex");
-
-                    b.ToTable("AspNetRoles");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("Shoppy.Models.DBEntities.UserRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -321,7 +365,7 @@ namespace Shoppy.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.HasOne("Shoppy.Models.DBEntities.UserRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -343,26 +387,44 @@ namespace Shoppy.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Shoppy.Models.DBEntities.Order", b =>
+            modelBuilder.Entity("Shoppy.Models.DBEntities.BuyOffer", b =>
                 {
-                    b.HasOne("Shoppy.Models.DBEntities.User", "User")
-                        .WithMany("Orders")
+                    b.HasOne("Shoppy.Models.DBEntities.SellOffer", "SellOffer")
+                        .WithMany("BuyOffers")
+                        .HasForeignKey("SellOfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Shoppy.Models.DBEntities.ProductTagSellOffer", b =>
+                {
+                    b.HasOne("Shoppy.Models.DBEntities.ProductTag", "ProductTag")
+                        .WithMany("ProductTagSellOffers")
+                        .HasForeignKey("ProductTagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Shoppy.Models.DBEntities.SellOffer", "SellOffer")
+                        .WithMany("ProductTagSellOffers")
+                        .HasForeignKey("SellOfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Shoppy.Models.DBEntities.SellOffer", b =>
+                {
+                    b.HasOne("Shoppy.Models.DBEntities.User", null)
+                        .WithMany("SellOffers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Shoppy.Models.DBEntities.ProductOrder", b =>
+            modelBuilder.Entity("Shoppy.Models.DBEntities.TransactionHistory", b =>
                 {
-                    b.HasOne("Shoppy.Models.DBEntities.Order", "Order")
-                        .WithMany("ProdcutOrders")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Shoppy.Models.DBEntities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
+                    b.HasOne("Shoppy.Models.DBEntities.User", null)
+                        .WithMany("TransactionHistories")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 
 namespace Shoppy.Models.DBEntities.Contracts
 {
-    public interface IProductOrder
-    { 
+    public interface IProductTag
+    {
         [Key]
         int Id { get; set; }
-        int Quantity { get; set; }
-        int ProductId { get; set; }
-        int OrderId { get; set; }
 
-        Order Order { get; set; }
-        Product Product { get; set; }
+        [Required]
+        string Tag { get; set; }
+
+        //IList<SellOffer> SellOffers { get; set; }
     }
 }

@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shoppy.Data;
 
 namespace Shoppy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200509231349_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,30 +145,6 @@ namespace Shoppy.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Shoppy.Models.DBEntities.BuyOffer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("OfferedMoney")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<int>("SellOfferId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SellOfferId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("BuyOffer");
-                });
-
             modelBuilder.Entity("Shoppy.Models.DBEntities.ProductTag", b =>
                 {
                     b.Property<int>("Id")
@@ -202,9 +180,6 @@ namespace Shoppy.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    b.Property<bool>("CanReciveBuyOffers")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("PriceIsNegotiable")
                         .HasColumnType("tinyint(1)");
@@ -317,9 +292,6 @@ namespace Shoppy.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("SuperUserScore")
-                        .HasColumnType("int");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
@@ -385,21 +357,6 @@ namespace Shoppy.Migrations
                 {
                     b.HasOne("Shoppy.Models.DBEntities.User", null)
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Shoppy.Models.DBEntities.BuyOffer", b =>
-                {
-                    b.HasOne("Shoppy.Models.DBEntities.SellOffer", "SellOffer")
-                        .WithMany("BuyOffers")
-                        .HasForeignKey("SellOfferId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Shoppy.Models.DBEntities.User", null)
-                        .WithMany("BuyOffers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

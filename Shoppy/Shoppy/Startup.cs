@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Shoppy.Models.DBEntities;
+using Shoppy.Areas.Sell.Services;
 
 namespace Shoppy
 {
@@ -41,10 +42,12 @@ namespace Shoppy
             //    .AddDefaultUI()
             //    .AddDefaultTokenProviders();
 
-            services.AddIdentity<User, UserRole>(options => options.SignIn.RequireConfirmedAccount = false)
+            services.AddIdentity<User, IdentityRole<int>>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
+
+            services.AddScoped<SellService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,7 +95,7 @@ namespace Shoppy
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
             //if changing roles change register.cshtm and register.cshtml.cs
-            var RoleManager = serviceProvider.GetRequiredService<RoleManager<UserRole>>();
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
             string[] roles = { "Admin", "SuperUser" };
             IdentityResult roleResult;
 
@@ -102,7 +105,7 @@ namespace Shoppy
                 if(!roleCheck)
                 {
                     //here in this line we are creating a role and seed it to the database
-                    roleResult = await RoleManager.CreateAsync(new UserRole(role));
+                    roleResult = await RoleManager.CreateAsync(new IdentityRole<int>(role));
                 }
             }
         }
@@ -121,7 +124,8 @@ namespace Shoppy
                     EmailConfirmed = true,
                     PhoneNumber = Configuration.GetSection("AdminSettings")["AdminPhoneNumber"],
                     PhoneNumberConfirmed = true,
-                    IsDeleted = false
+                    IsDeleted = false,
+                    Money = 9999999.99m
                 };
                 var result = await userManager.CreateAsync(adminUser, Configuration.GetSection("AdminSettings")["AdminPassword"]);
 
@@ -143,7 +147,8 @@ namespace Shoppy
                     EmailConfirmed = true,
                     PhoneNumber = Configuration.GetSection("UserSettings")["UserPhoneNumber"],
                     PhoneNumberConfirmed = true,
-                    IsDeleted = false
+                    IsDeleted = false,
+                    Money = 9999999.99m,                    
                 };
                 var result = await userManager.CreateAsync(newUser, Configuration.GetSection("UserSettings")["UserPassword"]);
             }

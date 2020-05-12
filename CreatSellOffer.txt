@@ -1,0 +1,33 @@
+@using Shoppy.Areas.Sell.Models.DTO
+@model CreateSellOfferDTO
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>CreateSellOffer</h1>
+
+<form action="Create" method="post">
+    <label>Product Titel:</label>
+    <input class="form-control" type="text" name="ProductTitel" value="" />
+    <br />
+    <label>Price:</label>
+    <input class="form-control" type="number" name="ProductPrice" value="" />
+    <br />
+    <label>Is the price negotiable:</label>
+    <input class="form-control" type="checkbox" name="PriceIsNegotiable" value="" />
+    <br />
+    <label>Quantity:</label>
+    <input class="form-control" type="number" name="Quantity" value="" />
+    <br />
+    <label>Tags:<br />If there are more than one tags separete them with space</label>
+    <input class="form-control" type="text" name="PriceIsNegotiable" value="" />
+    <br />
+    <button class="btn btn-primary" type="submit">Create Component</button>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

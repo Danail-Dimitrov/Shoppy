@@ -16,8 +16,7 @@ namespace Shoppy.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true)
+                    ConcurrencyStamp = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -44,10 +43,10 @@ namespace Shoppy.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: false),
                     LastName = table.Column<string>(nullable: true),
-                    Money = table.Column<decimal>(type: "decimal(7, 5)", nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false)
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    Money = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,18 +54,16 @@ namespace Shoppy.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Product",
+                name: "ProductTags",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(7, 5)", nullable: false),
-                    Model = table.Column<string>(nullable: true)
+                    Tag = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Product", x => x.Id);
+                    table.PrimaryKey("PK_ProductTags", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -176,20 +173,22 @@ namespace Shoppy.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Order",
+                name: "SellOffers",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    OrderPlaced = table.Column<DateTime>(nullable: false),
-                    OrderFulfielled = table.Column<DateTime>(nullable: true),
+                    ProductTitle = table.Column<string>(nullable: false),
+                    ProductPrice = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    PriceIsNegotiable = table.Column<bool>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Order", x => x.Id);
+                    table.PrimaryKey("PK_SellOffers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Order_AspNetUsers_UserId",
+                        name: "FK_SellOffers_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -197,28 +196,48 @@ namespace Shoppy.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductOrder",
+                name: "TransactionHistories",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Quantity = table.Column<int>(nullable: false),
-                    ProductId = table.Column<int>(nullable: false),
-                    OrderId = table.Column<int>(nullable: false)
+                    Date = table.Column<DateTime>(nullable: false),
+                    Text = table.Column<string>(nullable: false),
+                    IsProvit = table.Column<bool>(nullable: false),
+                    MoneyAmaount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductOrder", x => x.Id);
+                    table.PrimaryKey("PK_TransactionHistories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductOrder_Order_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Order",
+                        name: "FK_TransactionHistories_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductTagSellOffers",
+                columns: table => new
+                {
+                    ProductTagId = table.Column<int>(nullable: false),
+                    SellOfferId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductTagSellOffers", x => new { x.ProductTagId, x.SellOfferId });
+                    table.ForeignKey(
+                        name: "FK_ProductTagSellOffers_ProductTags_ProductTagId",
+                        column: x => x.ProductTagId,
+                        principalTable: "ProductTags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProductOrder_Product_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Product",
+                        name: "FK_ProductTagSellOffers_SellOffers_SellOfferId",
+                        column: x => x.SellOfferId,
+                        principalTable: "SellOffers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -261,19 +280,19 @@ namespace Shoppy.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Order_UserId",
-                table: "Order",
+                name: "IX_ProductTagSellOffers_SellOfferId",
+                table: "ProductTagSellOffers",
+                column: "SellOfferId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SellOffers_UserId",
+                table: "SellOffers",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductOrder_OrderId",
-                table: "ProductOrder",
-                column: "OrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductOrder_ProductId",
-                table: "ProductOrder",
-                column: "ProductId");
+                name: "IX_TransactionHistories_UserId",
+                table: "TransactionHistories",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -294,16 +313,19 @@ namespace Shoppy.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ProductOrder");
+                name: "ProductTagSellOffers");
+
+            migrationBuilder.DropTable(
+                name: "TransactionHistories");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Order");
+                name: "ProductTags");
 
             migrationBuilder.DropTable(
-                name: "Product");
+                name: "SellOffers");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
