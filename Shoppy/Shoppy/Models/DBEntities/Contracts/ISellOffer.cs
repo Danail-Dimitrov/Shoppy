@@ -21,6 +21,8 @@ namespace Shoppy.Models.DBEntities.Contracts
         [DisplayName("Price")]
         decimal ProductPrice { get; set; }
 
+        decimal TotalPrice { get; set; }
+
         [Required]
         bool PriceIsNegotiable { get; set; }
 

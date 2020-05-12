@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Shoppy.Models.DBEntities;
 using Shoppy.Areas.Sell.Services;
+using Shoppy.Areas.Error.Controllers;
 
 namespace Shoppy
 {
@@ -48,6 +49,7 @@ namespace Shoppy
                 .AddDefaultTokenProviders();
 
             services.AddScoped<SellService>();
+            services.AddScoped<ErrorController>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

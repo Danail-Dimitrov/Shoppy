@@ -1,0 +1,14 @@
+﻿@using Shoppy.Areas.Error.Models.DTO
+@model ErrorDTO
+
+@{
+    ViewData["Title"] = "CreatingSellOfferError";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>An Error occuredd while creating the SellOffer</h1>
+<p>@Model.ErrorMessege</p>
+<a class="nav-link text-dark" asp-area="Sell" asp-controller="Sell" asp-action="Create">Try creating a SellOffer again</a>
+
+
+

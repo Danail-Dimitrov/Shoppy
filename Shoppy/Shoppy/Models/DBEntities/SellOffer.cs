@@ -18,22 +18,19 @@ namespace Shoppy.Models.DBEntities
 
         [Key]
         public int Id { get; set; }
-
         [DisplayName("Product")]
         [Required]
         public string ProductTitle { get; set; }
-
         [Column(TypeName = "decimal(10,2)")]
         [DisplayName("Price")]
         public decimal ProductPrice { get; set; }
-
+        [Column(TypeName = "decimal(10,2)")]
+        [DisplayName("Total Price")]
+        public decimal TotalPrice { get; set; }
         [Required]
         public bool PriceIsNegotiable { get; set; }
-
         public bool CanReciveBuyOffers { get; set; }
-
         public int Quantity { get; set; }
-
         [Required]
         [ForeignKey("UserId")]
         public int UserId { get; set; }

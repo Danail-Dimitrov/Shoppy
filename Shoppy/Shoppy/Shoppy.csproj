@@ -39,6 +39,7 @@
 
 
   <ItemGroup>
+    <Folder Include="Areas\Error\Data\" />
     <Folder Include="Areas\Sell\Data\" />
   </ItemGroup>
 

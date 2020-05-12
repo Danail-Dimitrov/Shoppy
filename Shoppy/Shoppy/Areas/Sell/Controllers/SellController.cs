@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Shoppy.Areas.Error.Controllers;
+using Shoppy.Areas.Error.Models.DTO;
 using Shoppy.Areas.Sell.Models.DTO;
 using Shoppy.Areas.Sell.Services;
-using Shoppy.Data;
 using Shoppy.Models.DBEntities;
 
 namespace Shoppy.Areas.Sell.Controllers
@@ -18,11 +19,13 @@ namespace Shoppy.Areas.Sell.Controllers
     {
         private readonly SellService sellService;
         private readonly UserManager<User> userManager;
+        private readonly ErrorController errorController;
 
-        public SellController(SellService sellService, UserManager<User> userManager)
+        public SellController(SellService sellService, UserManager<User> userManager, ErrorController errorController)
         {
             this.sellService = sellService;
             this.userManager = userManager;
+            this.errorController = errorController;
         }
 
         // GET: Sell
@@ -52,17 +55,23 @@ namespace Shoppy.Areas.Sell.Controllers
         [Area("Sell")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(IFormCollection collection)
+        public IActionResult Create(CreateSellOfferDTO sellOfferDTO)
         {
             try
             {
-                // TODO: Add insert logic here
+                int userId = int.Parse(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-                return RedirectToAction(nameof(Index));
+                sellService.ValidateCreatSellOfferDTO(sellOfferDTO);
+
+                sellService.CreateSellOffer(sellOfferDTO, userId);
+
+                return RedirectToAction("Index");
             }
-            catch
+            catch (ArgumentException ex)
             {
-                return View();
+                ErrorDTO errorDTO = new ErrorDTO(ex.Message.ToString());
+
+                return RedirectToAction("CreatingSellOfferError", "Error", new { area = "Error" });
             }
         }
 
