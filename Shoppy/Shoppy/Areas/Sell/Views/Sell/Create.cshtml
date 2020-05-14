@@ -1,9 +1,7 @@
-﻿@using Shoppy.Areas.Sell.Models.DTO
-@model CreateSellOfferDTO
+﻿@model CreateSellOfferDTO
 
 @{
     ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>CreateSellOffer</h1>
@@ -16,7 +14,7 @@
     <input class="form-control" type="number" name="productPrice" value="" />
     <br />
     <label>Is the price negotiable:</label>
-    <input class="form-control" type="checkbox" name="priceIsNegotiable" value="" />
+    <input class="form-control" type="checkbox" name="priceIsNegotiable" value="true" />
     <br />
     <label>Quantity:</label>
     <input class="form-control" type="number" name="quantity" value="" />
