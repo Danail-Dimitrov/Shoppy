@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Renci.SshNet.Messages;
 using Shoppy.Areas.Error.Controllers;
-using Shoppy.Areas.Error.Models.DTO;
 using Shoppy.Areas.Sell.Models.DTO;
 using Shoppy.Areas.Sell.Services;
 using Shoppy.Models.DBEntities;
@@ -17,15 +19,13 @@ namespace Shoppy.Areas.Sell.Controllers
 {
     public class SellController : Controller
     {
-        private readonly SellService sellService;
-        private readonly UserManager<User> userManager;
-        private readonly ErrorController errorController;
+        private readonly SellService _sellService;
+        private readonly ErrorController _errorController;
 
-        public SellController(SellService sellService, UserManager<User> userManager, ErrorController errorController)
+        public SellController(SellService sellService, ErrorController errorController)
         {
-            this.sellService = sellService;
-            this.userManager = userManager;
-            this.errorController = errorController;
+            this._sellService = sellService;
+            this._errorController = errorController;
         }
 
         // GET: Sell
@@ -36,8 +36,8 @@ namespace Shoppy.Areas.Sell.Controllers
         {
             int userId = int.Parse(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            List<SellOffer> sellOffers = sellService.GetOffersFromUser(userId);
-            SellIndexDTO selOffersDTO = new SellIndexDTO(sellOffers);
+            List<SellOfferDTO> sellOfferDTOs = _sellService.GetOffersFromUser(userId);
+            SellIndexDTO selOffersDTO = new SellIndexDTO(sellOfferDTOs);
 
             return View(selOffersDTO);
         }
@@ -55,22 +55,24 @@ namespace Shoppy.Areas.Sell.Controllers
         [Area("Sell")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CreateSellOfferDTO sellOfferDTO)
+        public IActionResult Create(SellOfferDTO sellOfferDTO)
         {
             try
             {
-                int userId = int.Parse(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+                if(ModelState.IsValid)
+                {
+                    int userId = int.Parse(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-                sellService.ValidateCreatSellOfferDTO(sellOfferDTO);
+                    this._sellService.ValidateSellOfferDTO(sellOfferDTO);
 
-                sellService.CreateSellOffer(sellOfferDTO, userId);
+                    this._sellService.CreateSellOffer(sellOfferDTO, userId);
+                }
 
                 return RedirectToAction("Index");
             }
             catch (ArgumentException ex)
             {
-                ErrorDTO errorDTO = new ErrorDTO(ex.Message.ToString());
-
+                TempData["Error"] = ex.Message;
                 return RedirectToAction("CreatingSellOfferError", "Error", new { area = "Error" });
             }
         }
@@ -78,9 +80,12 @@ namespace Shoppy.Areas.Sell.Controllers
         // GET: Sell/Edit/5
         [Authorize]
         [Area("Sell")]
+        [HttpGet]
         public IActionResult Edit(int id)
         {
-            return View();
+            SellOfferDTO sellOfferDTO = this._sellService.GetSellOfferById(id);
+
+            return View(sellOfferDTO);
         }
 
         // POST: Sell/Edit/5
@@ -88,17 +93,23 @@ namespace Shoppy.Areas.Sell.Controllers
         [Area("Sell")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, IFormCollection collection)
+        public IActionResult Edit(SellOfferDTO sellOfferDTO)
         {
             try
             {
-                // TODO: Add update logic here
+                if(ModelState.IsValid)
+                {
+                    this._sellService.ValidateSellOfferDTO(sellOfferDTO);
 
-                return RedirectToAction(nameof(Index));
+                    this._sellService.EditSellOffer(sellOfferDTO);
+                }
+                
+                return RedirectToAction("Index");
             }
-            catch
+            catch (ArgumentException ex)
             {
-                return View();
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("EditingSellOfferError", "Error", new { area = "Error" });                
             }
         }
 
@@ -107,7 +118,9 @@ namespace Shoppy.Areas.Sell.Controllers
         [Area("Sell")]
         public IActionResult Delete(int id)
         {
-            return View();
+            SellOfferDTO sellOfferDTO = this._sellService.GetSellOfferById(id);
+
+            return View(sellOfferDTO);
         }
 
         // POST: Sell/Delete/5
@@ -115,11 +128,11 @@ namespace Shoppy.Areas.Sell.Controllers
         [HttpPost]
         [Area("Sell")]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id, IFormCollection collection)
+        public IActionResult Delete(SellOfferDTO sellOfferDTO)
         {
             try
             {
-                // TODO: Add delete logic here
+                this._sellService.ValidateSellOfferDTO(sellOfferDTO);
 
                 return RedirectToAction(nameof(Index));
             }

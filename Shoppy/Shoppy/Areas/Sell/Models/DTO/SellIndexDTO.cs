@@ -13,11 +13,11 @@ namespace Shoppy.Areas.Sell.Models.DTO
 
         }
 
-        public SellIndexDTO(List<SellOffer> sellOffers)
+        public SellIndexDTO(List<SellOfferDTO> SellOfferDTOs)
         {
-            this.SellOffers = sellOffers;
+            this.SellOfferDTOs = SellOfferDTOs;
         }
 
-        public List<SellOffer> SellOffers { get; set; }
+        public List<SellOfferDTO> SellOfferDTOs { get; set; }
     }
 }

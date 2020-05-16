@@ -20,6 +20,8 @@
     <Compile Remove="Migrations\20200512120220_FixesFKInBuyOffer1.Designer.cs" />
     <Compile Remove="Migrations\20200512120340_FixesFKInBuyOffer1.cs" />
     <Compile Remove="Migrations\20200512120340_FixesFKInBuyOffer1.Designer.cs" />
+    <Compile Remove="Migrations\20200512232208_AddingTotalValueColumToSellOffers.cs" />
+    <Compile Remove="Migrations\20200512232208_AddingTotalValueColumToSellOffers.Designer.cs" />
   </ItemGroup>
 
 
@@ -40,6 +42,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Error\Data\" />
+    <Folder Include="Areas\Error\Models\" />
     <Folder Include="Areas\Sell\Data\" />
   </ItemGroup>
 

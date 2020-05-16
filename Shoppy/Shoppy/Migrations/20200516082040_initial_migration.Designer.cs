@@ -9,8 +9,8 @@ using Shoppy.Data;
 namespace Shoppy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200512232208_AddingTotalValueColumToSellOffers")]
-    partial class AddingTotalValueColumToSellOffers
+    [Migration("20200516082040_initial_migration")]
+    partial class initial_migration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

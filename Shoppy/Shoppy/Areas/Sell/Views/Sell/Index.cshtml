@@ -4,28 +4,29 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Your Sell Offers</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New Sell Offer</a>
 </p>
 
-@for(var i = 0; i < Model.SellOffers.Count; i++)
+@for(var i = 0; i < Model.SellOfferDTOs.Count; i++)
 {
-    var sellOffer = Model.SellOffers[i];
+    var sellOffer = Model.SellOfferDTOs[i];
 
-    <div>
-        <div class="form-control">Product: @sellOffer.ProductTitle</div>
-        <div class="form-control">Price for single item: @sellOffer.ProductPrice</div>
-        <div class="form-control">Quantity: @sellOffer.Quantity</div>
-        <div class="form-control">Total Price: @sellOffer.TotalPrice</div>
-        <div class="form-control">The price is negotiable: @sellOffer.PriceIsNegotiable</div>
-    </div>
+<div>
+    <div class="form-control">Product: @sellOffer.ProductTitle</div>
+    <div class="form-control">Price for single item: @sellOffer.ProductPrice</div>
+    <div class="form-control">Quantity: @sellOffer.Quantity</div>
+    <div class="form-control">Total Price: @sellOffer.TotalPrice</div>
+    <div class="form-control">The price is negotiable: @sellOffer.PriceIsNegotiable</div>
+    <div class="form-control">The Offer can resive buy offers: @sellOffer.CanReciveBuyOffers</div>
+</div>
 
     <div class="mt-2">
+        <button class="btn btn-info"><a class="text-white" asp-area="Sell" asp-action="BuyOffers" asp-controller="Sell" asp-route-id="@sellOffer.Id">BuyOffers</a></button>
         <button class="btn btn-success"><a class="text-white" asp-area="Sell" asp-action="Edit" asp-controller="Sell" asp-route-id="@sellOffer.Id">Edit</a></button>
         <button class="btn btn-danger"><a class="text-white" asp-area="Sell" asp-action="Delete" asp-controller="Sell" asp-route-id="@sellOffer.Id">Delete</a></button>
-        <button class="btn btn-info"><a class="text-white" asp-area="Sell" asp-action="BuyOffers" asp-controller="Sell" asp-route-id="@sellOffer.Id">BuyOffers</a></button>
     </div>
     <hr />
 }

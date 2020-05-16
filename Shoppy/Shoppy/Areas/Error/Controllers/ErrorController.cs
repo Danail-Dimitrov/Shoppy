@@ -20,5 +20,11 @@ namespace Shoppy.Areas.Error.Controllers
         {
             return View(errorDTO);
         }
+
+        [Area("Error")]
+        public IActionResult EditingSellOfferError(ErrorDTO errorDTO)
+        {
+            return View(errorDTO);
+        }
     }
 }

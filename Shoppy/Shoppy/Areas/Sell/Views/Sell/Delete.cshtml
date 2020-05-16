@@ -1,0 +1,26 @@
+﻿@model Shoppy.Areas.Sell.Models.DTO.SellOfferDTO
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<form asp-action="Delete" method="post" asp-area="Sell">
+    <label>Product title:</label>
+    <input class="form-control" name="ProductTitle" type="text" value="@Model.ProductTitle" disabled>
+    <label>Price:</label>
+    <input class="form-control" name="ProductPrice" type="number" value="@Model.ProductPrice" disabled>
+    <label>Quantity:</label>
+    <input class="form-control" name="Quantity" type="number" value="@Model.Quantity" disabled>
+    <label>Is the price negotiable:</label>
+    <input class="form-control" name="PriceIsNegotiable" type="checkbox" value="true" checked="@Model.PriceIsNegotiable" disabled>
+    <label>Can the offer recive Buy Offers:</label>
+    <input class="form-control" name="CanReciveBuyOffers" type="checkbox" value="true" checked="@Model.CanReciveBuyOffers" disabled>
+    <button class="btn btn-primary" asp-route-id="@Model.Id">Delete Component</button>
+</form>
+
+<div>
+    <a asp-action="Index">Back to your Sell Offers</a>
+</div>

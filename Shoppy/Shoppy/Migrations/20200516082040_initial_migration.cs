@@ -2,7 +2,7 @@
 
 namespace Shoppy.Migrations
 {
-    public partial class AddingTotalValueColumToSellOffers : Migration
+    public partial class initial_migration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

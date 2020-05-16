@@ -1,0 +1,30 @@
+﻿@model SellOfferDTO
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>SellOfferDTO</h4>
+<hr />
+<form asp-action="edit" method="post" asp-area="Sell">
+    <label>Product title:</label>
+    <input class="form-control" name="ProductTitle" type="text" value="@Model.ProductTitle">
+    <label>Price:</label>
+    <input class="form-control" name="ProductPrice" type="number" value="@Model.ProductPrice">
+    <label>Quantity:</label>
+    <input class="form-control" name="Quantity" type="number" value="@Model.Quantity">
+    <label>Is the price negotiable:</label>
+    <input class="form-control" name="PriceIsNegotiable" type="checkbox" value="true" checked="@Model.PriceIsNegotiable">
+    <label>Can the offer recive Buy Offers:</label>
+    <input class="form-control" name="CanReciveBuyOffers" type="checkbox" value="true" checked="@Model.CanReciveBuyOffers">
+    <button class="btn btn-primary">Edit Component</button>
+</form>
+<div>
+    <a asp-action="Index">Back to your SellOffers</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

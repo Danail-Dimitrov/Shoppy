@@ -23,6 +23,7 @@ namespace Shoppy.Models.DBEntities
         public string ProductTitle { get; set; }
         [Column(TypeName = "decimal(10,2)")]
         [DisplayName("Price")]
+        [Required]
         public decimal ProductPrice { get; set; }
         [Column(TypeName = "decimal(10,2)")]
         [DisplayName("Total Price")]
@@ -30,6 +31,7 @@ namespace Shoppy.Models.DBEntities
         [Required]
         public bool PriceIsNegotiable { get; set; }
         public bool CanReciveBuyOffers { get; set; }
+        [Required]
         public int Quantity { get; set; }
         [Required]
         [ForeignKey("UserId")]
