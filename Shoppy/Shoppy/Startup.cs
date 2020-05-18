@@ -39,7 +39,7 @@ namespace Shoppy
 
             //services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
             //    .AddEntityFrameworkStores<ApplicationDbContext>()
-            //    //.AddRoles<IdentityRole<int>>()
+            //    .AddRoles<IdentityRole<int>>()
             //    .AddDefaultUI()
             //    .AddDefaultTokenProviders();
 

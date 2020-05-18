@@ -21,6 +21,7 @@ namespace Shoppy.Models.DBEntities
         [DisplayName("Product")]
         [Required]
         public string ProductTitle { get; set; }
+        public string ProductDescription { get; set; }
         [Column(TypeName = "decimal(10,2)")]
         [DisplayName("Price")]
         [Required]

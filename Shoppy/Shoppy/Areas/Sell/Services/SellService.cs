@@ -1,4 +1,5 @@
 ﻿using Shoppy.Areas.Sell.Models.DTO;
+using Shoppy.Areas.Sell.Services.Contracts;
 using Shoppy.Data;
 using Shoppy.Models.DBEntities;
 using System;
@@ -8,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace Shoppy.Areas.Sell.Services
 {
-    public class SellService
+    public class SellService : ISellService
     {
+        private const int ScoreForAddingOffer = 2;
         private readonly ApplicationDbContext _dbContext;
 
         public SellService()
@@ -21,12 +23,12 @@ namespace Shoppy.Areas.Sell.Services
         {
             this._dbContext = dbContext;
         }
-     
+
         public List<SellOfferDTO> GetOffersFromUser(int userId)
-        {            
-           List<SellOffer> sellOffers = _dbContext.SellOffers
-                       .Where(s => s.UserId == userId)
-                       .ToList();
+        {
+            List<SellOffer> sellOffers = _dbContext.SellOffers
+                        .Where(s => s.UserId == userId)
+                        .ToList();
 
             List<SellOfferDTO> sellOfferDTOs = new List<SellOfferDTO>(sellOffers.Count);
 
@@ -47,6 +49,7 @@ namespace Shoppy.Areas.Sell.Services
                 CanReciveBuyOffers = true,
                 ProductPrice = sellOfferDTO.ProductPrice,
                 ProductTitle = sellOfferDTO.ProductTitle,
+                ProductDescription = sellOfferDTO.ProductDescription,
                 Quantity = sellOfferDTO.Quantity
             };
             sellOffer.TotalPrice = sellOffer.ProductPrice * sellOffer.Quantity;
@@ -58,13 +61,14 @@ namespace Shoppy.Areas.Sell.Services
             this._dbContext.SaveChanges();
         }
 
-        public void EditSellOffer (SellOfferDTO sellOfferDTO)
+        public void EditSellOffer(SellOfferDTO sellOfferDTO)
         {
             SellOffer oldSellOffer = this._dbContext
                 .SellOffers
                 .FirstOrDefault(x => x.Id == sellOfferDTO.Id);
 
             oldSellOffer.ProductTitle = sellOfferDTO.ProductTitle;
+            oldSellOffer.ProductDescription = sellOfferDTO.ProductDescription;
             oldSellOffer.ProductPrice = sellOfferDTO.ProductPrice;
             oldSellOffer.Quantity = sellOfferDTO.Quantity;
             oldSellOffer.PriceIsNegotiable = sellOfferDTO.PriceIsNegotiable;
@@ -73,9 +77,11 @@ namespace Shoppy.Areas.Sell.Services
 
             this._dbContext.SaveChanges();
         }
-     
-        public SellOfferDTO GetSellOfferById (int id)
+
+        public SellOfferDTO GetSellOfferById(int? id)
         {
+            CheckIdIsNull(id);
+
             SellOffer sellOffer = this._dbContext.SellOffers.FirstOrDefault(x => x.Id == id);
 
             SellOfferDTO sellOfferDTO = ConvertSellOfferToDTO(sellOffer);
@@ -83,11 +89,13 @@ namespace Shoppy.Areas.Sell.Services
             return sellOfferDTO;
         }
 
-        private SellOfferDTO ConvertSellOfferToDTO (SellOffer sellOffer)
+        public void Delete(int? id)
         {
-            SellOfferDTO sellOfferDTO = new SellOfferDTO(sellOffer.Id, sellOffer.ProductTitle, sellOffer.ProductPrice, sellOffer.TotalPrice, sellOffer.PriceIsNegotiable, sellOffer.CanReciveBuyOffers, sellOffer.Quantity, null);
+            CheckIdIsNull(id);
 
-            return sellOfferDTO;
+            SellOffer sellOffer = _dbContext.SellOffers.Find(id);
+            _dbContext.SellOffers.Remove(sellOffer);
+            _dbContext.SaveChanges();
         }
 
         public void ValidateSellOfferDTO(SellOfferDTO sellOfferDTO)
@@ -111,6 +119,29 @@ namespace Shoppy.Areas.Sell.Services
             if(sellOfferDTO.Quantity <= 0 || sellOfferDTO.Quantity > 999999)
             {
                 throw new ArgumentException("The quantity of products can not be zero or negative or greter than 999999");
+            }
+        }
+
+        public void IncreaseUserScore(int? userId)
+        {
+            CheckIdIsNull(userId);
+            User user = this._dbContext.Users.Find(userId);
+            user.SuperUserScore += ScoreForAddingOffer;
+            this._dbContext.SaveChanges();
+        }
+
+        private SellOfferDTO ConvertSellOfferToDTO(SellOffer sellOffer)
+        {
+            SellOfferDTO sellOfferDTO = new SellOfferDTO(sellOffer.Id, sellOffer.ProductTitle,sellOffer.ProductDescription, sellOffer.ProductPrice, sellOffer.TotalPrice, sellOffer.PriceIsNegotiable, sellOffer.CanReciveBuyOffers, sellOffer.Quantity, null);
+
+            return sellOfferDTO;
+        }
+
+        private void CheckIdIsNull(int? id)
+        {
+            if(id == null)
+            {
+                throw new ArgumentException("Id can not be null");
             }
         }
     }

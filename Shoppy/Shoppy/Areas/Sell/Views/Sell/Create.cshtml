@@ -4,29 +4,51 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>CreateSellOffer</h1>
+<h1>Create</h1>
 
-<form action="create" method="post">
-    <label>Product Titel:</label>
-    <input class="form-control" type="text" name="ProductTitle" value="" />
-    <br />
-    <label>Price for a single product:</label>
-    <input class="form-control" type="number" name="productPrice" value="" />
-    <br />
-    <label>Is the price negotiable:</label>
-    <input class="form-control" type="checkbox" name="priceIsNegotiable" value="true" />
-    <br />
-    <label>Quantity:</label>
-    <input class="form-control" type="number" name="quantity" value="" />
-    <br />
-    <label>Tags:<br />If there are more than one tags separete them with space<br/> Not implemented yet</label>
-    <input class="form-control" type="text" name="tags" value="" />
-    <br />
-    <button class="btn btn-primary" type="submit">Create SellOffer</button>
-    @Html.AntiForgeryToken();
-</form>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProductTitle" class="control-label"></label>
+                <input asp-for="ProductTitle" class="form-control" />
+                <span asp-validation-for="ProductTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductDescription" class="control-label"></label>
+                <input asp-for="ProductDescription" class="form-control" />
+                <span asp-validation-for="ProductDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductPrice" class="control-label"></label>
+                <input asp-for="ProductPrice" class="form-control" />
+                <span asp-validation-for="ProductPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="PriceIsNegotiable" /> @Html.DisplayNameFor(model => model.PriceIsNegotiable)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="CanReciveBuyOffers" /> @Html.DisplayNameFor(model => model.CanReciveBuyOffers)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
 
 <div>
-    <a asp-action="Index">Back to your Sell Offers</a>
+    <a asp-action="Index">Back to List</a>
 </div>
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Shoppy.Areas.Error.Models.DTO;
 
 namespace Shoppy.Areas.Error.Controllers
 {
@@ -16,15 +15,9 @@ namespace Shoppy.Areas.Error.Controllers
         }
 
         [Area("Error")]
-        public IActionResult CreatingSellOfferError(ErrorDTO errorDTO)
+        public IActionResult CRUDError()
         {
-            return View(errorDTO);
-        }
-
-        [Area("Error")]
-        public IActionResult EditingSellOfferError(ErrorDTO errorDTO)
-        {
-            return View(errorDTO);
+            return View();
         }
     }
 }
