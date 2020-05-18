@@ -12,32 +12,27 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="ProductTitle" class="control-label"></label>
+                <label asp-for="@Model.ProductTitle" class="control-label"></label>
                 <input asp-for="ProductTitle" class="form-control" />
                 <span asp-validation-for="ProductTitle" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ProductDescription" class="control-label"></label>
+                <label asp-for="@Model.ProductDescription" class="control-label"></label>
                 <input asp-for="ProductDescription" class="form-control" />
                 <span asp-validation-for="ProductDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ProductPrice" class="control-label"></label>
+                <label asp-for="@Model.ProductPrice" class="control-label"></label>
                 <input asp-for="ProductPrice" class="form-control" />
                 <span asp-validation-for="ProductPrice" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="PriceIsNegotiable" /> @Html.DisplayNameFor(model => model.PriceIsNegotiable)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="CanReciveBuyOffers" /> @Html.DisplayNameFor(model => model.CanReciveBuyOffers)
+                    <input class="form-check-input" asp-for="@Model.PriceIsNegotiable" /> @Html.DisplayNameFor(model => model.PriceIsNegotiable)
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="Quantity" class="control-label"></label>
+                <label asp-for="@Model.Quantity" class="control-label"></label>
                 <input asp-for="Quantity" class="form-control" />
                 <span asp-validation-for="Quantity" class="text-danger"></span>
             </div>
@@ -49,6 +44,9 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to your Sell Offers</a>
 </div>
 
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
