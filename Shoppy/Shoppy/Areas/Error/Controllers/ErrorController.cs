@@ -15,7 +15,19 @@ namespace Shoppy.Areas.Error.Controllers
         }
 
         [Area("Error")]
-        public IActionResult CRUDError()
+        public IActionResult SellOfferError()
+        {
+            return View();
+        }
+
+        [Area("Error")]
+        public IActionResult BuyOfferError()
+        {
+            return View();
+        }
+
+        [Area("Error")]
+        public IActionResult GettingDataFromDbError()
         {
             return View();
         }

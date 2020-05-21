@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Shoppy.Areas.Sell.Models.DTO
+namespace Shoppy.Models.DTO
 {
     public class SellOfferDTO
     {
@@ -39,7 +39,7 @@ namespace Shoppy.Areas.Sell.Models.DTO
         }
 
         public int Id { get; set; }
-        [StringLength(999999, ErrorMessage = "Products Title must be betwen 999999 and 3 in length", MinimumLength =3)]
+        [StringLength(999999, ErrorMessage = "Products Title must be betwen 999999 and 3 in length", MinimumLength = 3)]
         [Display(Name = "Product Title")]
         public string ProductTitle { get; set; }
         [Display(Name = "Product Description")]
@@ -54,7 +54,7 @@ namespace Shoppy.Areas.Sell.Models.DTO
         [Display(Name = "Can buy offers be recived")]
         public bool CanReciveBuyOffers { get; set; }
         [Display(Name = "Quantity")]
-        [Range(1, 999999, ErrorMessage = "The quantity of a product must be betwen 1 and 999999")]
+        [Range(1, 99, ErrorMessage = "The quantity of a product must be betwen 1 and 99")]
         public int Quantity { get; set; }
         public string TagsStr { get; set; }
         public List<string> Tags { get; set; }

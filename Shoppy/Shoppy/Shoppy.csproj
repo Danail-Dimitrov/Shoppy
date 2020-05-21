@@ -37,10 +37,13 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
     <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.20" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
+    <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
   </ItemGroup>
 
 
   <ItemGroup>
+    <Folder Include="Areas\Account\Data\" />
+    <Folder Include="Areas\Buy\Data\" />
     <Folder Include="Areas\Error\Data\" />
     <Folder Include="Areas\Error\Models\" />
     <Folder Include="Areas\Sell\Data\" />

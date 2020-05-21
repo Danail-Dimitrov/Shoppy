@@ -9,7 +9,7 @@ namespace Shoppy.Models.DBEntities.Contracts
     public interface IBuyOffer
     {
         int Id { get; set; }
-        int OfferedMoney { get; set; }
+        decimal OfferedMoney { get; set; }
         int SellOfferId { get; set; }
         int UserId { get; set; }
 

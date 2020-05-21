@@ -1,14 +1,12 @@
 ﻿@model IEnumerable<SellOfferDTO>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "ShowRandomOffers";
 }
 
-<h1>Your Sell Offers</h1>
+<h1>Maybe one of this offers will catch your eye</h1>
 
-<p>
-    <a asp-action="Create">Create New Sell Offer</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -17,6 +15,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ProductPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalPrice)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Quantity)
@@ -34,13 +35,14 @@
                 @Html.DisplayFor(modelItem => item.ProductPrice)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.TotalPrice)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Quantity)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                <a asp-action="BuyOffers" asp-route-id="@item.Id">Buy Offers</a>
+                <a asp-action="DetailsOfSellOffer" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Create" asp-route-id="@item.Id">Make a buy Offer</a>
             </td>
         </tr>
 }

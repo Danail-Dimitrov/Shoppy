@@ -25,5 +25,6 @@ namespace Shoppy.Data
         public DbSet<TransactionHistory> TransactionHistories { get; set; }
         public DbSet<ProductTag> ProductTags { get; set; }
         public DbSet<ProductTagSellOffer> ProductTagSellOffers { get; set; }
+        public DbSet<BuyOffer> BuyOffers { get; set; }
     }
 }

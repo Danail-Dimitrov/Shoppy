@@ -14,7 +14,7 @@ namespace Shoppy.Models.DBEntities
         public int Id { get; set; }
         [Required]
         [Column(TypeName = "decimal(10,2)")]
-        public int OfferedMoney { get; set; }
+        public decimal OfferedMoney { get; set; }
         [ForeignKey("SellOffer")]
         public int SellOfferId { get; set; }
         [ForeignKey("User")]

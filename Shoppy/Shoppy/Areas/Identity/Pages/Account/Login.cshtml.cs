@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Shoppy.Models.DBEntities;
+using Shoppy.Data;
 
 namespace Shoppy.Areas.Identity.Pages.Account
 {
@@ -21,14 +22,16 @@ namespace Shoppy.Areas.Identity.Pages.Account
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly ApplicationDbContext _dbContext;
 
         public LoginModel(SignInManager<User> signInManager, 
             ILogger<LoginModel> logger,
-            UserManager<User> userManager)
+            UserManager<User> userManager, ApplicationDbContext applicationDbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _dbContext = applicationDbContext;
         }
 
         [BindProperty]
@@ -81,6 +84,12 @@ namespace Shoppy.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                User user = _dbContext.Users.Where(x => x.UserName == Input.UserName).FirstOrDefault();
+                if(user.IsDeleted)
+                {
+                    TempData["Messege"] = "User is deleted";
+                    return RedirectToAction("Index", "Error", new { area = "Error" });
+                }
                 var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {

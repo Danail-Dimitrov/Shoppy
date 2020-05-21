@@ -1,8 +1,6 @@
-﻿using Shoppy.Models.DBEntities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Shoppy.Models.DTO;
 
 namespace Shoppy.Areas.Sell.Models.DTO
 {

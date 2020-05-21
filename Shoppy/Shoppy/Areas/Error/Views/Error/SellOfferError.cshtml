@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "EditingSellOfferError";
+}
+
+<h1>An Error occuredd while @TempData["TheErrorHappendWhen"] the SellOffer</h1>
+
+<p>@TempData["ExceptionMessege"]</p>
+<p>Try @TempData["TheErrorHappendWhen"] a Sell Offer again</p>
+
+<a asp-area="Sell" asp-controller="Sell" asp-action="Index">Return to your Sell Offers</a>
