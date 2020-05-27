@@ -16,7 +16,7 @@ using Shoppy.Models.DBEntities;
 using Shoppy.Areas.Sell.Services;
 using Shoppy.Areas.Error.Controllers;
 using Shoppy.Areas.Buy.Services;
-using Shoppy.Areas.Account.Services;
+using Shoppy.Areas.AccountManagement.Services;
 
 namespace Shoppy
 {
@@ -52,7 +52,7 @@ namespace Shoppy
 
             services.AddScoped<SellService>();
             services.AddScoped<BuyService>();
-            services.AddScoped<AccountService>();
+            services.AddScoped<AccountManagementService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

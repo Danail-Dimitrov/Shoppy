@@ -21,28 +21,43 @@
             <th>
                 @Html.DisplayNameFor(model => model.Quantity)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HasAcceptedBuyOffer)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductTitle)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                <a asp-action="BuyOffers" asp-route-id="@item.Id">Buy Offers</a>
-            </td>
-        </tr>
-}
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @(item.HasAcceptedBuyOffer ? "Yes" : "No")
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    @if(!item.HasAcceptedBuyOffer)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> @:|
+                        <a asp-action="BuyOffers" asp-route-id="@item.Id">Buy Offers</a> @:|
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> 
+                    }
+                    @if(item.HasAcceptedBuyOffer)
+                    {
+                        <a asp-action="FinishSale" asp-route-id="@item.Id">Finish Sale</a> @:|
+                        <a asp-action="RemoveAcceptedBuyOffer" asp-route-id="@item.Id">Unaccept Buy Offer</a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

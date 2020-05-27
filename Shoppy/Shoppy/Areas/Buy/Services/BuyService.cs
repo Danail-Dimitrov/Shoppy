@@ -1,6 +1,7 @@
 ﻿using Shoppy.Areas.Buy.Models.DTO;
 using Shoppy.Areas.Buy.Services.Contracts;
 using Shoppy.Data;
+using Shoppy.Exceptions;
 using Shoppy.Models.DBEntities;
 using Shoppy.Models.DTO;
 using System;
@@ -25,6 +26,8 @@ namespace Shoppy.Areas.Buy.Services
         {
             CheckIdIsValid(userId);
 
+            CheckUserIsDeleted(userId);
+
             List<BuyOffer> buyOffers = this._dbContext.BuyOffers.Where(s => s.UserId == userId).ToList();
 
             List<BuyOfferWithTitelDTO> buyOfferWithTitelDTOs = new List<BuyOfferWithTitelDTO>(buyOffers.Count);            
@@ -42,10 +45,11 @@ namespace Shoppy.Areas.Buy.Services
         public List<SellOfferDTO>  GetRandomSellOffers(int numberOfSellOffers, int? currentUserId)
         {
             CheckIdIsValid(currentUserId);
+            CheckUserIsDeleted(currentUserId);
 
             int numberOfEntriesToSkip = NumberOfEntriesToSkip(numberOfSellOffers, (int)(currentUserId));
 
-            List<SellOffer> sellOffers = this._dbContext.SellOffers.Where(x => x.CanReciveBuyOffers == true && x.UserId != currentUserId).Skip(numberOfEntriesToSkip).Take(numberOfSellOffers).ToList();
+            List<SellOffer> sellOffers = this._dbContext.SellOffers.Where(x => x.CanReciveBuyOffers == true && x.UserId != currentUserId && x.HasAcceptedBuyOffer == false).Skip(numberOfEntriesToSkip).Take(numberOfSellOffers).ToList();
 
             List<SellOfferDTO> sellOfferDTOs = new List<SellOfferDTO>(sellOffers.Count);
 
@@ -54,7 +58,7 @@ namespace Shoppy.Areas.Buy.Services
                 SellOfferDTO sellOfferDTO = ConvertSellOfferToDTO(item);
                 User user = this._dbContext.Users.Find(item.UserId);
 
-                if(!user.IsDeleted)
+                if(!user.IsDeleted && item.CanReciveBuyOffers)
                 {
                     sellOfferDTOs.Add(sellOfferDTO);
                 }              
@@ -65,9 +69,11 @@ namespace Shoppy.Areas.Buy.Services
 
         public SellOfferDTO GetSellOfferById(int? id)
         {
-            CheckIdIsValid(id);
+            CheckIdIsValid(id);      
 
             SellOffer sellOffer = this._dbContext.SellOffers.Find(id);
+
+            CheckUserIsDeleted(sellOffer.UserId);
 
             SellOfferDTO sellOfferDTO = ConvertSellOfferToDTO(sellOffer);
 
@@ -91,6 +97,7 @@ namespace Shoppy.Areas.Buy.Services
         public void CreateBuyOffer(BuyOfferDTO buyOfferDTO, int? userId)
         {
             CheckIdIsValid(userId);
+            CheckUserIsDeleted(userId);
 
             BuyOffer buyOffer = new BuyOffer
             {
@@ -106,6 +113,7 @@ namespace Shoppy.Areas.Buy.Services
         public void IncreaseUserScore(int? userId)
         {
             CheckIdIsValid(userId);
+            CheckUserIsDeleted(userId);
             User user = this._dbContext.Users.Find(userId);
             user.SuperUserScore += ScoreForAddingBuyOffer;
             this._dbContext.SaveChanges();
@@ -116,6 +124,7 @@ namespace Shoppy.Areas.Buy.Services
             CheckIdIsValid(buyOfferId);
 
             BuyOffer buyOffer = this._dbContext.BuyOffers.Find(buyOfferId);
+            CheckUserIsDeleted(buyOffer.UserId);
 
             BuyOfferDTO buyOfferDTO = ConvertBuyOfferToDTO(buyOffer);
 
@@ -124,12 +133,13 @@ namespace Shoppy.Areas.Buy.Services
 
         public decimal GetAskedMoneyForProduct(int? id)
         {
-            return this._dbContext.SellOffers.Find(id).ProductPrice;
+            return this._dbContext.SellOffers.Find(id).TotalPrice;
         }
 
         public void EditBuyOffer(EditBuyOfferDTO editBuyOfferDTO, int? userId)
         {
             CheckIdIsValid(userId);
+            CheckUserIsDeleted(userId);
 
             BuyOffer oldBuyOffer = this._dbContext.BuyOffers.Find(editBuyOfferDTO.Id);
 
@@ -150,6 +160,8 @@ namespace Shoppy.Areas.Buy.Services
 
             BuyOffer buyOffer = this._dbContext.BuyOffers.Find(id);
 
+            CheckUserIsDeleted(buyOffer.UserId);
+
             string priductTitel = this._dbContext.SellOffers.Find(buyOffer.SellOfferId).ProductTitle;
 
             BuyOfferWithTitelDTO buyOfferWithTitelDTO = new BuyOfferWithTitelDTO(buyOffer.Id, buyOffer.OfferedMoney, buyOffer.SellOfferId, priductTitel);
@@ -162,7 +174,11 @@ namespace Shoppy.Areas.Buy.Services
             CheckIdIsValid(id);
             CheckIdIsValid(userId);
 
+            CheckUserIsDeleted(userId);
+
             BuyOffer buyOffer = this._dbContext.BuyOffers.Find(id);
+
+            CheckIfBuyHasBeenAccepted(buyOffer);
 
             if(buyOffer.UserId == userId)
             {
@@ -191,7 +207,7 @@ namespace Shoppy.Areas.Buy.Services
 
         private SellOfferDTO ConvertSellOfferToDTO(SellOffer sellOffer)
         {
-            SellOfferDTO sellOfferDTO = new SellOfferDTO(sellOffer.Id, sellOffer.ProductTitle, sellOffer.ProductDescription, sellOffer.ProductPrice, sellOffer.TotalPrice, sellOffer.PriceIsNegotiable, sellOffer.CanReciveBuyOffers, sellOffer.Quantity, null);
+            SellOfferDTO sellOfferDTO = new SellOfferDTO(sellOffer.Id, sellOffer.ProductTitle, sellOffer.ProductDescription, sellOffer.ProductPrice, sellOffer.TotalPrice, sellOffer.PriceIsNegotiable, sellOffer.CanReciveBuyOffers, sellOffer.Quantity, null, sellOffer.HasAcceptedBuyOffer);
 
             return sellOfferDTO;
         }
@@ -222,6 +238,27 @@ namespace Shoppy.Areas.Buy.Services
             }
 
             return nuberOfEntriesToSkip;
+        }
+
+        private void CheckUserIsDeleted(int? userId)
+        {
+            bool userIsDeleted = this._dbContext.Users.Find(userId).IsDeleted;
+            if(userIsDeleted)
+            {
+                throw new UserIsDeletedException("The user is deleted");
+            }
+        }
+        //TO DO: Test
+        private void CheckIfBuyHasBeenAccepted(BuyOffer buyOffer)
+        {
+            SellOffer sellOffer = this._dbContext.SellOffers.Where(x => x.AcceptedBuyOfferId == buyOffer.Id).FirstOrDefault();
+
+            if(sellOffer != null)
+            {
+                sellOffer.AcceptedBuyOfferId = 0;
+                sellOffer.HasAcceptedBuyOffer = false;
+                this._dbContext.SaveChanges();
+            }
         }
     }
 }

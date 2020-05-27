@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shoppy.Areas.Buy.Models.DTO;
 using Shoppy.Areas.Buy.Services;
 using Shoppy.Areas.Buy.Services.Contracts;
+using Shoppy.Exceptions;
 using Shoppy.Models.DTO;
 
 namespace Shoppy.Areas.Buy.Controllers
@@ -42,6 +43,11 @@ namespace Shoppy.Areas.Buy.Controllers
                 TempData["ErrorMessege"] = "Could not get the data from the database";
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
+            catch(UserIsDeletedException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
         }
 
         [HttpGet]
@@ -62,6 +68,11 @@ namespace Shoppy.Areas.Buy.Controllers
                 TempData["ErrorMessege"] = "Could not get the data from the database";
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
+            catch(UserIsDeletedException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
         }
 
         [HttpGet]
@@ -78,6 +89,11 @@ namespace Shoppy.Areas.Buy.Controllers
             {
                 TempData["ExceptionMessege"] = ex.Message;
                 TempData["ErrorMessege"] = "Could not get the data from the database";
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
+            catch(UserIsDeletedException ex)
+            {
+                TempData["Messege"] = ex.Message;
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
         }
@@ -101,6 +117,11 @@ namespace Shoppy.Areas.Buy.Controllers
                 TempData["ErrorMessege"] = "Could not get the data from the database";
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
+            catch(UserIsDeletedException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
         }
 
         // POST: Buy/Create
@@ -118,10 +139,9 @@ namespace Shoppy.Areas.Buy.Controllers
                         OfferedMoney = createBuyOfferDTO.MoneyOffered,
                         SellOfferId = createBuyOfferDTO.Id
                     };
+                    this._buyService.ValidateBuyOfferDTO(buyOfferDTO);
 
                     int userId = int.Parse(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-                    this._buyService.ValidateBuyOfferDTO(buyOfferDTO);
 
                     this._buyService.CreateBuyOffer(buyOfferDTO, userId);
 
@@ -140,6 +160,11 @@ namespace Shoppy.Areas.Buy.Controllers
                 TempData["ExceptionMessege"] = ex.Message;
                 TempData["TheErrorHappendWhen"] = "creating";
                 return RedirectToAction("BuyOfferError", "Error", new { area = "Error" });
+            }
+            catch(UserIsDeletedException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
         }
 
@@ -164,6 +189,11 @@ namespace Shoppy.Areas.Buy.Controllers
             {
                 TempData["ExceptionMessege"] = ex.Message;
                 TempData["ErrorMessege"] = "Could not get the data from the database";
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
+            catch(UserIsDeletedException ex)
+            {
+                TempData["Messege"] = ex.Message;
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
         }
@@ -202,6 +232,11 @@ namespace Shoppy.Areas.Buy.Controllers
                 TempData["TheErrorHappendWhen"] = "editing";
                 return RedirectToAction("BuyOfferError", "Error", new { area = "Error" });
             }
+            catch(UserIsDeletedException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
         }
 
         // GET: Buy/Delete/5
@@ -219,6 +254,11 @@ namespace Shoppy.Areas.Buy.Controllers
             {
                 TempData["ExceptionMessege"] = ex.Message;
                 TempData["ErrorMessege"] = "Could not get the data from the database";
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
+            catch(UserIsDeletedException ex)
+            {
+                TempData["Messege"] = ex.Message;
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
         }
@@ -248,6 +288,11 @@ namespace Shoppy.Areas.Buy.Controllers
                 TempData["ExceptionMessege"] = ex.Message;
                 TempData["TheErrorHappendWhen"] = "editing";
                 return RedirectToAction("SellOfferError", "Error", new { area = "Error" });
+            }
+            catch(UserIsDeletedException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
         }
     }

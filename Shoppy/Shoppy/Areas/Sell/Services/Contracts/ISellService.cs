@@ -24,5 +24,9 @@ namespace Shoppy.Areas.Sell.Services.Contracts
         void IncreaseUserScore(int? userId);
 
         List<ShowBuyOffersDTO> GetBuyOffers(int? sellOfferId);
+
+        void FinishSale(int? sellOfferId, int? currentUserId);
+
+        void AcceptBuyOffer(int? buyOfferId);
     }
 }

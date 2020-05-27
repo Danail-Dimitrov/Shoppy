@@ -24,10 +24,8 @@ namespace Shoppy.Areas.Sell.Services
         public List<SellOfferDTO> GetSellOffersFromUser(int? userId)
         {
             CheckIdIsValid(userId);
-            if(CheckIfUserIsDeleted(userId))
-            {
-                throw new UserIsDeletedException("User is deleted");
-            }
+            CheckUserIsDeleted(userId);
+
 
             List<SellOffer> sellOffers = _dbContext.SellOffers
                         .Where(s => s.UserId == userId)
@@ -46,16 +44,14 @@ namespace Shoppy.Areas.Sell.Services
         public void CreateSellOffer(SellOfferDTO sellOfferDTO, int? userId)
         {
             CheckIdIsValid(userId);
-            if(CheckIfUserIsDeleted(userId))
-            {
-                throw new UserIsDeletedException("User is deleted");
-            }
+            CheckUserIsDeleted(userId);
 
             SellOffer sellOffer = new SellOffer
             {
                 PriceIsNegotiable = sellOfferDTO.PriceIsNegotiable,
                 BuyOffers = null,
                 CanReciveBuyOffers = true,
+                HasAcceptedBuyOffer = false,
                 ProductPrice = sellOfferDTO.ProductPrice,
                 ProductTitle = sellOfferDTO.ProductTitle,
                 ProductDescription = sellOfferDTO.ProductDescription,
@@ -73,10 +69,7 @@ namespace Shoppy.Areas.Sell.Services
         public void EditSellOffer(SellOfferDTO sellOfferDTO, int? userId)
         {
             CheckIdIsValid(userId);
-            if(CheckIfUserIsDeleted(userId))
-            {
-                throw new UserIsDeletedException("User, who owns this sell offer, is deleted");
-            }
+            CheckUserIsDeleted(userId);
 
             SellOffer oldSellOffer = this._dbContext
                 .SellOffers
@@ -106,10 +99,7 @@ namespace Shoppy.Areas.Sell.Services
 
             SellOffer sellOffer = this._dbContext.SellOffers.FirstOrDefault(x => x.Id == id);
 
-            if(CheckIfUserIsDeleted(sellOffer.UserId))
-            {
-                throw new UserIsDeletedException("User, who owns this sell offer, is deleted");
-            }
+            CheckUserIsDeleted(sellOffer.UserId);
 
             SellOfferDTO sellOfferDTO = ConvertSellOfferToDTO(sellOffer);
 
@@ -122,11 +112,7 @@ namespace Shoppy.Areas.Sell.Services
             CheckIdIsValid(userId);
 
             SellOffer sellOffer = _dbContext.SellOffers.Find(id);
-
-            if(CheckIfUserIsDeleted(sellOffer.UserId))
-            {
-                throw new UserIsDeletedException("User, who owns this sell offer, is deleted");
-            }
+            CheckUserIsDeleted(userId);
 
             if(sellOffer.UserId == userId)
             {
@@ -169,10 +155,7 @@ namespace Shoppy.Areas.Sell.Services
         public void IncreaseUserScore(int? userId)
         {
             CheckIdIsValid(userId);
-            if(CheckIfUserIsDeleted(userId))
-            {
-                throw new UserIsDeletedException("User is deleted");
-            }
+            CheckUserIsDeleted(userId);
 
             User user = this._dbContext.Users.Find(userId);
             user.SuperUserScore += ScoreForAddingOffer;
@@ -185,21 +168,64 @@ namespace Shoppy.Areas.Sell.Services
 
             List<BuyOffer> buyOffers = this._dbContext.BuyOffers.Where(b => b.SellOfferId == sellOfferId).ToList();
 
-            if(CheckIfUserIsDeleted(buyOffers[0].UserId))
-            {
-                throw new UserIsDeletedException("User is deleted");
-            }
-
             List<ShowBuyOffersDTO> showBuyOffersDTOs = new List<ShowBuyOffersDTO>(buyOffers.Count);
 
             decimal askingPriceOfTheSellOffer = this._dbContext.SellOffers.Find(sellOfferId).ProductPrice;
 
             foreach(BuyOffer buyOffer in buyOffers)
             {
-                showBuyOffersDTOs.Add(ConvertBuyOfferToDTO(buyOffer, askingPriceOfTheSellOffer));
+                bool userIsDeleted = this._dbContext.Users.Find(buyOffer.UserId).IsDeleted;
+                if(!userIsDeleted)
+                {
+                    showBuyOffersDTOs.Add(ConvertBuyOfferToDTO(buyOffer, askingPriceOfTheSellOffer));
+                }
+
             }
-          
+
             return showBuyOffersDTOs;
+        }
+
+        public void AcceptBuyOffer(int? buyOfferId)
+        {
+            CheckIdIsValid(buyOfferId);
+
+            BuyOffer buyOffer = this._dbContext.BuyOffers.Find(buyOfferId);
+            SellOffer sellOffer = this._dbContext.SellOffers.Where(x => x.Id == buyOffer.SellOfferId).FirstOrDefault();
+
+            sellOffer.HasAcceptedBuyOffer = true;
+            sellOffer.AcceptedBuyOfferId = (int)(buyOfferId);
+
+            this._dbContext.SaveChanges();
+        }
+
+        public void FinishSale(int? sellOfferId, int? currentUserId)
+        {
+            CheckIdIsValid(currentUserId);
+            CheckUserIsDeleted(currentUserId);
+
+            SellOffer sellOffer = this._dbContext.SellOffers.Find(sellOfferId);
+            BuyOffer buyOffer = this._dbContext.BuyOffers.Find(sellOffer.AcceptedBuyOfferId);
+            User seller = this._dbContext.Users.Find(currentUserId);
+            User buyer = this._dbContext.Users.Find(buyOffer.UserId);
+
+            decimal moneyOfferd = buyOffer.OfferedMoney;
+            if(buyer.Money < moneyOfferd)
+            {
+                throw new BuyerHasInsufficientFundsException("Buyer has insufficient funds!");
+            }
+            seller.Money += moneyOfferd;
+            buyer.Money -= moneyOfferd; 
+
+            TransactionHistory sellerTransactionHistory = new TransactionHistory(DateTime.Now, sellOffer.ProductTitle, true, buyOffer.OfferedMoney, (int)(currentUserId));
+            TransactionHistory buyerTransactionHistory = new TransactionHistory(DateTime.Now, sellOffer.ProductTitle, false, buyOffer.OfferedMoney, buyer.Id);
+            this._dbContext.TransactionHistories.Add(sellerTransactionHistory);
+            this._dbContext.TransactionHistories.Add(buyerTransactionHistory);
+
+            List<BuyOffer> buyOffers = this._dbContext.BuyOffers.Where(x => x.SellOfferId == sellOffer.Id).ToList();
+            this._dbContext.RemoveRange(buyOffers);
+            this._dbContext.SellOffers.Remove(sellOffer);
+
+            this._dbContext.SaveChanges();
         }
 
         private ShowBuyOffersDTO ConvertBuyOfferToDTO(BuyOffer buyOffer, decimal askedPrice)
@@ -211,7 +237,7 @@ namespace Shoppy.Areas.Sell.Services
 
         private SellOfferDTO ConvertSellOfferToDTO(SellOffer sellOffer)
         {
-            SellOfferDTO sellOfferDTO = new SellOfferDTO(sellOffer.Id, sellOffer.ProductTitle,sellOffer.ProductDescription, sellOffer.ProductPrice, sellOffer.TotalPrice, sellOffer.PriceIsNegotiable, sellOffer.CanReciveBuyOffers, sellOffer.Quantity, null);
+            SellOfferDTO sellOfferDTO = new SellOfferDTO(sellOffer.Id, sellOffer.ProductTitle,sellOffer.ProductDescription, sellOffer.ProductPrice, sellOffer.TotalPrice, sellOffer.PriceIsNegotiable, sellOffer.CanReciveBuyOffers, sellOffer.Quantity, null, sellOffer.HasAcceptedBuyOffer);
 
             return sellOfferDTO;
         }
@@ -234,9 +260,13 @@ namespace Shoppy.Areas.Sell.Services
             }
         }
 
-        private bool CheckIfUserIsDeleted(int? userId)
+        private void CheckUserIsDeleted(int? userId)
         {
-            return this._dbContext.Users.Find(userId).IsDeleted;
+            bool userIsDeleted = this._dbContext.Users.Find(userId).IsDeleted;
+            if(userIsDeleted)
+            {
+                throw new UserIsDeletedException("The user is deleted");
+            }
         }
     }
 }

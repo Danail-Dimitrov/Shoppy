@@ -27,6 +27,12 @@ namespace Shoppy.Areas.Error.Controllers
         }
 
         [Area("Error")]
+        public IActionResult AccountManagementError()
+        {
+            return View();
+        }
+
+        [Area("Error")]
         public IActionResult GettingDataFromDbError()
         {
             return View();

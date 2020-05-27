@@ -37,6 +37,9 @@ namespace Shoppy.Models.DBEntities
         [Required]
         [ForeignKey("UserId")]
         public int UserId { get; set; }
+        public bool HasAcceptedBuyOffer { get; set; }
+        public int AcceptedBuyOfferId { get; set; }
+
 
         public IList<ProductTagSellOffer> ProductTagSellOffers { get; set; }        
         public IList<BuyOffer> BuyOffers { get; set; }

@@ -15,12 +15,13 @@ namespace Shoppy.Models.DBEntities
 
         }
 
-        public TransactionHistory(DateTime date, string text, bool isProvit, decimal moneyAmaount)
+        public TransactionHistory(DateTime date, string productTitle, bool isProvit, decimal moneyAmaount, int userId)
         {
             this.Date = date;
-            this.Text = text;
+            this.ProductTitle = productTitle;
             this.IsProvit = isProvit;
             this.MoneyAmaount = moneyAmaount;
+            this.UserId = userId;
         }
 
         [Key]
@@ -28,7 +29,7 @@ namespace Shoppy.Models.DBEntities
         [Required]
         public DateTime Date { get; set; }
         [Required]
-        public string Text { get; set; }
+        public string ProductTitle { get; set; }
         [Required]
         public bool IsProvit { get; set; }
         [Required]

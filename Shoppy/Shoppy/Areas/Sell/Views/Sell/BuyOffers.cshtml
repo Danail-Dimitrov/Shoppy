@@ -31,7 +31,7 @@
                 @Html.DisplayFor(modelItem => item.OfferedMoney)
             </td>
             <td>
-                <a asp-action="AcceptSellOffer" asp-route-id="@item.Id">Accept Offer</a> |
+                <a asp-area="Sell" asp-controller="Sell" asp-action="AcceptSellOffer" asp-route-id="@item.Id">Accept Offer</a> |
                 <a asp-action="Delete" asp-controller="Buy" asp-area="Buy" asp-route-id="@item.Id">Delete Buy Offer</a> 
             </td>
         </tr>

@@ -13,7 +13,7 @@ namespace Shoppy.Models.DTO
 
         }
 
-        public SellOfferDTO(string productTitle, string productDescription, decimal productPrice, decimal totalPrice, bool priceIsNegotiable, bool canReciveBuyOffers, int quantity, string tagsStr)
+        public SellOfferDTO(string productTitle, string productDescription, decimal productPrice, decimal totalPrice, bool priceIsNegotiable, bool canReciveBuyOffers, int quantity, string tagsStr, bool hasAcceptedBuyOffer)
         {
             this.ProductTitle = productTitle;
             this.ProductDescription = productDescription;
@@ -23,9 +23,10 @@ namespace Shoppy.Models.DTO
             this.CanReciveBuyOffers = canReciveBuyOffers;
             this.Quantity = quantity;
             this.TagsStr = tagsStr;
+            this.HasAcceptedBuyOffer = hasAcceptedBuyOffer;
         }
 
-        public SellOfferDTO(int id, string productTitle, string productDescription, decimal productPrice, decimal totalPrice, bool priceIsNegotiable, bool canReciveBuyOffers, int quantity, string tagsStr)
+        public SellOfferDTO(int id, string productTitle, string productDescription, decimal productPrice, decimal totalPrice, bool priceIsNegotiable, bool canReciveBuyOffers, int quantity, string tagsStr, bool hasAcceptedBuyOffer)
         {
             this.Id = id;
             this.ProductTitle = productTitle;
@@ -36,6 +37,7 @@ namespace Shoppy.Models.DTO
             this.CanReciveBuyOffers = canReciveBuyOffers;
             this.Quantity = quantity;
             this.TagsStr = tagsStr;
+            this.HasAcceptedBuyOffer = hasAcceptedBuyOffer;
         }
 
         public int Id { get; set; }
@@ -57,6 +59,7 @@ namespace Shoppy.Models.DTO
         [Range(1, 99, ErrorMessage = "The quantity of a product must be betwen 1 and 99")]
         public int Quantity { get; set; }
         public string TagsStr { get; set; }
+        public bool HasAcceptedBuyOffer { get; set; }
         public List<string> Tags { get; set; }
     }
 }

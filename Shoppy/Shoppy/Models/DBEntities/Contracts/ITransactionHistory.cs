@@ -14,7 +14,7 @@ namespace Shoppy.Models.DBEntities.Contracts
         [Required]
         DateTime Date { get; set; }
         [Required]
-        string Text { get; set; }
+        string ProductTitle { get; set; }
         [Required]
         bool IsProvit { get; set; }
         [Required]

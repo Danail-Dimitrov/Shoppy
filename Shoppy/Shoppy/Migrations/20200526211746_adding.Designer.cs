@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shoppy.Data;
 
 namespace Shoppy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200526211746_adding")]
+    partial class adding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -203,9 +205,6 @@ namespace Shoppy.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("AcceptedBuyOfferId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("CanReciveBuyOffers")
                         .HasColumnType("tinyint(1)");
 
@@ -256,7 +255,7 @@ namespace Shoppy.Migrations
                     b.Property<decimal>("MoneyAmaount")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<string>("ProductTitle")
+                    b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 

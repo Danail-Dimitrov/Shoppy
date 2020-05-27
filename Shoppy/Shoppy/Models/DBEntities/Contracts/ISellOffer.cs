@@ -30,6 +30,8 @@ namespace Shoppy.Models.DBEntities.Contracts
 
         int Quantity { get; set; }
 
+        bool HasAcceptedBuyOffer { get; set; }
+
         [Required]
         int UserId { get; set; }
   

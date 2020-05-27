@@ -33,7 +33,8 @@ namespace Shoppy.Areas.Sell.Controllers
         }
 
         /// <summary>
-        /// Calls the SellService to get all SellOffers that the logged in user has and passes them to the View, using SellIndexDTO.
+        /// Calls the SellService to get all SellOffers that the logged in 
+        /// has and passes them to the View, using SellIndexDTO.
         /// </summary>
         /// <returns>Index View with SellIndexDTO</returns>
         // GET: Sell
@@ -306,6 +307,61 @@ namespace Shoppy.Areas.Sell.Controllers
                 List<ShowBuyOffersDTO> showBuyOffersDTOs = this._sellService.GetBuyOffers(id);
 
                 return View(showBuyOffersDTOs);
+            }
+            catch(ArgumentException ex)
+            {
+                TempData["ExceptionMessege"] = ex.Message;
+                TempData["ErrorMessege"] = "Could not get the data from the database";
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
+            catch(UserIsDeletedException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id">Id of the offer that needs to be accepted</param>
+        /// <returns></returns>
+        [Authorize]
+        //[HttpPost]
+        [Area("Sell")]
+        public IActionResult AcceptSellOffer(int? id)
+        {
+            try
+            {
+                this._sellService.AcceptBuyOffer(id);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch(ArgumentException ex)
+            {
+                TempData["ExceptionMessege"] = ex.Message;
+                TempData["ErrorMessege"] = "Could not get the data from the database";
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
+            catch(UserIsDeletedException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
+        }
+
+        [Authorize]
+        //[HttpPost]
+        [Area("Sell")]
+        public IActionResult FinishSale(int? id)
+        {
+            try
+            {
+                int userId = int.Parse(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                this._sellService.FinishSale(id, userId);
+
+                return RedirectToAction(nameof(Index));
             }
             catch(ArgumentException ex)
             {
