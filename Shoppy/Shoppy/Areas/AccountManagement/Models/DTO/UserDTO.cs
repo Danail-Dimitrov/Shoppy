@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Shoppy.Areas.AccountManagement.Models.DTO
 {
+    /// <summary>
+    ///  DTO used to transfer information about the user
+    /// </summary>
     public class UserDTO
     {
         public UserDTO(string userName, string firstName, string lastName, decimal money, int superUserScore)

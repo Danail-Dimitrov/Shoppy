@@ -15,6 +15,12 @@ namespace Shoppy.Areas.AccountManagement.Services.Contracts
 
         UserDTO GetUserById(int? useId);
 
-        void Delete(int userId);
+        void Delete(int? userId);
+
+        void RemoveAllOrders(int? userId);
+
+        List<TransactionHistoryDTO> GetTransactionHistories(int? userId);
+
+        decimal GetProfit(int? userId);
     }
 }

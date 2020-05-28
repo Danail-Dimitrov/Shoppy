@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Shoppy.Areas.Error.Controllers
 {
+    /// <summary>
+    /// Shows an ErrorView bassed where the error is comming from
+    /// </summary>
     public class ErrorController : Controller
     {
         [Area("Error")]

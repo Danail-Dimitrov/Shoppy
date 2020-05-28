@@ -39,13 +39,13 @@
             @Html.DisplayNameFor(model => model.PriceIsNegotiable)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PriceIsNegotiable)
+            @(Model.PriceIsNegotiable ? "Yes" : "No")
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CanReciveBuyOffers)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CanReciveBuyOffers)
+            @(Model.CanReciveBuyOffers ? "Yes" : "No")
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Quantity)

@@ -7,6 +7,9 @@ using Xunit;
 
 namespace Shoppy.Areas.Buy.Models.DTO
 {
+    /// <summary>
+    ///  DTO used to transfer information when a BuyOffer is beeing edited
+    /// </summary>
     public class EditBuyOfferDTO
     {
         public int Id { get; set; }

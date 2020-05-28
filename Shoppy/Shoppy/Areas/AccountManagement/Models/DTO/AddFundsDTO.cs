@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Shoppy.Areas.AccountManagement.Models.DTO
 {
+    /// <summary>
+    ///  DTO used to transfer when adding funds
+    /// </summary>
     public class AddFundsDTO
     {
         [Display(Name = "Money to Add")]

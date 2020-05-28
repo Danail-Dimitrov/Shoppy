@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Shoppy.Areas.Buy.Models.DTO
 {
+    /// <summary>
+    /// DTO used to transfer information when a BuyOffer is beeing created
+    /// </summary>
     public class CreateBuyOfferDTO
     {
         public int Id { get; set; }

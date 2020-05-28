@@ -54,7 +54,7 @@
                     @if(item.HasAcceptedBuyOffer)
                     {
                         <a asp-action="FinishSale" asp-route-id="@item.Id">Finish Sale</a> @:|
-                        <a asp-action="RemoveAcceptedBuyOffer" asp-route-id="@item.Id">Unaccept Buy Offer</a>
+                        <a asp-action="UnacceptBuyOffer" asp-route-id="@item.Id">Unaccept Buy Offer</a>
                     }
                 </td>
             </tr>

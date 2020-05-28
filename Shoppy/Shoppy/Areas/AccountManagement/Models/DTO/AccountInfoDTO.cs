@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Shoppy.Areas.AccountManagement.Models.DTO
 {
+    /// <summary>
+    /// DTO used to transfer information about the user's SuperUserScroe and Money
+    /// </summary>
     public class AccountInfoDTO
     {
         [Display(Name = "User Score")]

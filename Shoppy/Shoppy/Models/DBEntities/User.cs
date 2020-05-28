@@ -18,10 +18,10 @@ namespace Shoppy.Models.DBEntities
         [Required]
         [Column(TypeName = "decimal(10,2)")]
         public decimal Money { get; set; }
+        public int SuperUserScore { get; set; }
 
         public ICollection<SellOffer> SellOffers { get; set; }
         public ICollection<TransactionHistory> TransactionHistories { get; set; }
-        public ICollection<BuyOffer> BuyOffers { get; set; }
-        public int SuperUserScore { get; set; }
+        public ICollection<BuyOffer> BuyOffers { get; set; }      
     }
 }

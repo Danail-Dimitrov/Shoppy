@@ -4,6 +4,9 @@ using Shoppy.Models.DTO;
 
 namespace Shoppy.Areas.Sell.Models.DTO
 {
+    /// <summary>
+    /// DTO carring a List of SellOfferDTOs for the Index View
+    /// </summary>
     public class SellIndexDTO
     {
         public SellIndexDTO()

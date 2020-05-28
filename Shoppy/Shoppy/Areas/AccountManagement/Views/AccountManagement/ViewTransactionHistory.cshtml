@@ -1,0 +1,47 @@
+﻿@model IEnumerable<TransactionHistoryDTO>
+
+@{
+    ViewData["Title"] = "ViewTransactionHistory";
+}
+
+<h1>Your transaction history</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsProvit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MoneyAmaount)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductTitle)
+            </td>
+            <td>
+                @(item.IsProvit ? "Yes" : "No")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MoneyAmaount)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<p>Total Profit: @TempData["Profit"]</p>

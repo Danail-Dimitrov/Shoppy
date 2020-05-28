@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shoppy", "Shoppy\Shoppy.csproj", "{098FA591-947F-4EEC-B3FF-E14CFDF1D72E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shoppy", "Shoppy\Shoppy.csproj", "{098FA591-947F-4EEC-B3FF-E14CFDF1D72E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shoppy.Tests", "Shoppy.Tests\Shoppy.Tests.csproj", "{562FCFCC-6B31-40F6-AA1D-7873DE5A46F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{098FA591-947F-4EEC-B3FF-E14CFDF1D72E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{098FA591-947F-4EEC-B3FF-E14CFDF1D72E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{098FA591-947F-4EEC-B3FF-E14CFDF1D72E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{562FCFCC-6B31-40F6-AA1D-7873DE5A46F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{562FCFCC-6B31-40F6-AA1D-7873DE5A46F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{562FCFCC-6B31-40F6-AA1D-7873DE5A46F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{562FCFCC-6B31-40F6-AA1D-7873DE5A46F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

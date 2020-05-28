@@ -16,6 +16,10 @@ namespace Shoppy.Areas.Buy.Controllers
 {
     public class BuyController : Controller
     {
+        /// <summary>
+        /// Shows the default value for how many random SellOffers need to be displayed in the ShowRandomOffers method.
+        /// </summary>
+        private const int DefaultRandomBuyOffersPerPage = 4;
         private readonly IBuyService _buyService;
 
         public BuyController(BuyService buyService)
@@ -23,6 +27,10 @@ namespace Shoppy.Areas.Buy.Controllers
             this._buyService = buyService;
         }
 
+        /// <summary>
+        /// Calls BuyService to get all the BuyOffers a User has in a list as BuyOfferWithTitelDTOs and them passes them to the IndexView. If an Exception is thrown by the Service calls ErrorController. This is the Index for this Controller.
+        /// </summary>
+        /// <returns>Index View and passes it the list with BuyOfferWithTitelDTO. If there is an Exception thrown redirects to ErrorController.</returns>
         // GET: Buy
         [Authorize]
         [HttpGet]
@@ -50,9 +58,14 @@ namespace Shoppy.Areas.Buy.Controllers
             }
         }
 
+        /// <summary>
+        /// Calls the BuyService to get a set number of random SellOffers, to be shown in the view. If an Exception is thrown by the Service ErrorContrller is called.
+        /// </summary>
+        /// <param name="numbderOfOffers">The number of random selloffers that are going to be shown on the View. The default value is shown in the constant DefaultRandomBuyOffersPerPage</param>
+        /// <returns>ShowOffersView and passes it the SellOfferDTOs. If there is an Exception thrown redirects to ErrorController.</returns>
         [HttpGet]
         [Area("Buy")]
-        public IActionResult ShowRandomOffers(int numbderOfOffers = 4)
+        public IActionResult ShowRandomOffers(int numbderOfOffers = DefaultRandomBuyOffersPerPage)
         {
             try
             {
@@ -60,7 +73,7 @@ namespace Shoppy.Areas.Buy.Controllers
 
                 List<SellOfferDTO> sellOfferDTOs = this._buyService.GetRandomSellOffers(numbderOfOffers, userId);
 
-                return View(sellOfferDTOs);
+                return View("ShowOffers", sellOfferDTOs);
             }
             catch(ArgumentException ex)
             {
@@ -75,8 +88,14 @@ namespace Shoppy.Areas.Buy.Controllers
             }
         }
 
+        /// <summary>
+        /// Calls BuyService to get details abiut a SellOffer stored in SellOfferDTO. If the Service throws and Exception ErrorController is called
+        /// </summary>
+        /// <param name="id">Id of the SellOffer whoes details are needed.</param>
+        /// <returns>DetailsOfSellOfferView and passes it the SellOfferDTO. If there is an Exception thrown redirects to ErrorController.</returns>
         [HttpGet]
         [Area("Buy")]
+        [Authorize]
         public IActionResult DetailsOfSellOffer(int? id)
         {
             try
@@ -98,6 +117,12 @@ namespace Shoppy.Areas.Buy.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Creats CreateBuyOfferDTO which stores the id and the Price of the SellOffer, for which the BuyOffer, that is beeing created, is. The Price of the SellOffer is recived from BuyService. If the Service throws an Exception ErrorController is called.
+        /// </summary>
+        /// <param name="id">Id of the SellOffer, for which the BuyOffer is beeing created.</param>
+        /// <returns>CreateView and passes it the CreateBuyOfferDTO. If there is an Exception thrown redirects to ErrorController.</returns>
         // GET: Buy/Create
         [Authorize]
         [Area("Buy")]
@@ -106,7 +131,7 @@ namespace Shoppy.Areas.Buy.Controllers
             try
             {
                 CreateBuyOfferDTO createBuyOfferDTO = new CreateBuyOfferDTO();
-                createBuyOfferDTO.AskedMoney = this._buyService.GetAskedMoneyForProduct(id);
+                createBuyOfferDTO.AskedMoney = this._buyService.GetAskedMoney(id);
                 createBuyOfferDTO.Id = (int)(id);
                 return View(createBuyOfferDTO);
 
@@ -124,10 +149,16 @@ namespace Shoppy.Areas.Buy.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets the CreateBuyOfferDTO, Validates that the model state is valid, if not throws and Exception. Creates BuyOfferDTO and passes it to BuyService to create BuyOdder. Calls BuyService to increase the user's SuperUserScore. If the Service throws an Exception ErrorControllrt iscalled.
+        /// </summary>
+        /// <param name="createBuyOfferDTO">The DTO storing the information about the BuyOffer that is going to be created.</param>
+        /// <returns>Redirects to Index. If there is an Exception thrown redirects to ErrorController.</returns>
         // POST: Buy/Create
         [HttpPost]
         [Area("Buy")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public IActionResult Create(CreateBuyOfferDTO createBuyOfferDTO)
         {
             try
@@ -139,7 +170,6 @@ namespace Shoppy.Areas.Buy.Controllers
                         OfferedMoney = createBuyOfferDTO.MoneyOffered,
                         SellOfferId = createBuyOfferDTO.Id
                     };
-                    this._buyService.ValidateBuyOfferDTO(buyOfferDTO);
 
                     int userId = int.Parse(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
@@ -168,8 +198,14 @@ namespace Shoppy.Areas.Buy.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets the id of the BuyOffer that needs to be edited, gets its information from SellService, Converts it to EditBuyOfferDTO and passes it to the View. If the Service throws an Exception ErrorController is called.
+        /// </summary>
+        /// <param name="id">Id of the BuyOffer that needs to be Edited</param>
+        /// <returns>EditView and passes it the EditBuyOfferDTO. If there is an Exception thrown redirects to ErrorController.</returns>
         // GET: Buy/Edit/5
         [Area("Buy")]
+        [Authorize]
         [HttpGet]
         public IActionResult Edit(int? id)
         {
@@ -198,8 +234,14 @@ namespace Shoppy.Areas.Buy.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets the information about the BuyOffer that needs to be Edited, using EditBuyOfferDTO and calls BuyService to edit it. If the Service throws an Exception ErrorController is called. 
+        /// </summary>
+        /// <param name="editBuyOfferDTO">The DTO storing the information about the BuyOffer that needs to be edited</param>
+        /// <returns>Redirects to Idndex. If there is an Exception thrown redirects to ErrorController.</returns>
         // POST: Buy/Edit/5
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         [Area("Buy")]
         public IActionResult Edit(EditBuyOfferDTO editBuyOfferDTO)
@@ -239,8 +281,14 @@ namespace Shoppy.Areas.Buy.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets the Id of the BuyOffer that needs to be delited, calls BuyService to get the information about it in the form of BuyOfferWithTitleDTO and passes it to the Delete View. If the Service throws an Exception ErrorController is called.
+        /// </summary>
+        /// <param name="id">The id of the BuyOffer that eeeds to be deleted</param>
+        /// <returns>DeleteView and passes it the BuyOfferWithTitleDTO. If there is an Exception thrown redirects to ErrorController.</returns>
         // GET: Buy/Delete/5
         [Area("Buy")]
+        [Authorize]
         [HttpGet]
         public IActionResult Delete(int? id)
         {
@@ -263,8 +311,14 @@ namespace Shoppy.Areas.Buy.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets the id of the BuyOffer that needs to be deleted and passes it BuyService. If the Service throws and Exception ErrorController will be called.
+        /// </summary>
+        /// <param name="id">The id of the BuyOffer that needs to be deleted</param>
+        /// <returns>Redirects to Index. If there is an Exception thrown redirects to ErrorController.</returns>
         // POST: Buy/Delete/5
         [HttpPost]
+        [Authorize]
         [Area("Buy"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirm(int? id)
@@ -288,6 +342,48 @@ namespace Shoppy.Areas.Buy.Controllers
                 TempData["ExceptionMessege"] = ex.Message;
                 TempData["TheErrorHappendWhen"] = "editing";
                 return RedirectToAction("SellOfferError", "Error", new { area = "Error" });
+            }
+            catch(UserIsDeletedException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
+        }
+
+        /// <summary>
+        /// Shows the GetSellOffersByNameView. It shows a searchbar for the user to serach a SellOffer.
+        /// </summary>
+        /// <returns>GetSellOffersByNameView</returns>
+        [HttpGet]
+        [Authorize]
+        [Area("Buy")]
+        public IActionResult GetSellOffersByName()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Gets the information about the searched SellOffer in the form of GetSellOfferByNameDTO, passes it to the BuyService and gets from it List of SellOfferDTOs that contains all SellOffer who meet the criteria from the GetSellOfferByNameDTO. If the Service throws a Exception ErrorController is called.
+        /// </summary>
+        /// <param name="getSellOfferByNameDTO">The DTO that contains the criteria for the SellOffers</param>
+        /// <returns>ShowOffersView and passes it the list of SellOffers that are going to be shown. If there is an Exception thrown redirects to ErrorController.</returns>
+        [Area("Buy")]
+        [Authorize]
+        public IActionResult GetSellOffersByName(GetSellOfferByNameDTO getSellOfferByNameDTO)
+        {
+            try
+            {
+                int userId = int.Parse(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                List<SellOfferDTO> sellOfferDTOs = this._buyService.GetSellOffersByName(getSellOfferByNameDTO, userId);
+
+                return View("ShowOffers", sellOfferDTOs);
+            }
+            catch(ArgumentException ex)
+            {
+                TempData["ExceptionMessege"] = ex.Message;
+                TempData["ErrorMessege"] = "Could not get the data from the database";
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
             catch(UserIsDeletedException ex)
             {

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Shoppy.Models.DTO
 {
+    /// <summary>
+    /// DTO that is used to transfer data abaut a given SellOffer
+    /// </summary>
     public class SellOfferDTO
     {
         public SellOfferDTO()

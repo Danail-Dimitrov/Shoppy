@@ -23,12 +23,14 @@ namespace Shoppy.Areas.Buy.Services.Contracts
 
         void IncreaseUserScore(int? userId);
 
-        decimal GetAskedMoneyForProduct(int? id);
+        decimal GetAskedMoney(int? id);
 
         void EditBuyOffer(EditBuyOfferDTO editBuyOfferDTO, int? userId);
 
         BuyOfferWithTitelDTO GetBuyOfferWithTitelByIndex(int? id);
 
         void DeleteBuyOffer(int? id, int? userId);
+
+        List<SellOfferDTO> GetSellOffersByName(GetSellOfferByNameDTO getSellOfferByNameDTO, int userId);
     }
 }

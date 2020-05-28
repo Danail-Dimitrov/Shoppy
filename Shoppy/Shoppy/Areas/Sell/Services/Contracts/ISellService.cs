@@ -27,6 +27,8 @@ namespace Shoppy.Areas.Sell.Services.Contracts
 
         void FinishSale(int? sellOfferId, int? currentUserId);
 
-        void AcceptBuyOffer(int? buyOfferId);
+        void AcceptBuyOffer(int? buyOfferId, int? userId);
+
+        void UnaccpetBuyOffer(int? sellOferId, int? userId);
     }
 }
