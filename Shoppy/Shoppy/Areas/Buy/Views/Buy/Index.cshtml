@@ -19,20 +19,26 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @*@Html.DisplayFor(modelItem => item.ProductTitle)*@
-                <a asp-action="DetailsOfSellOffer" asp-route-id="@item.SellOfferId">@Html.DisplayFor(modelItem => item.ProductTitle)</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OfferedMoney)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.ProductTitle)*@
+                    <a asp-action="DetailsOfSellOffer" asp-route-id="@item.SellOfferId">@Html.DisplayFor(modelItem => item.ProductTitle)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OfferedMoney)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+<div>
+    <a asp-action="ShowRandomOffers">Show random SellOffers</a>
+    <br />
+    <a asp-action="GetSellOffersByName">Search for a SellOffer</a>
+</div>

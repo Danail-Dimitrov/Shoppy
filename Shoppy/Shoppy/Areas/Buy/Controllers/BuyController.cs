@@ -56,6 +56,11 @@ namespace Shoppy.Areas.Buy.Controllers
                 TempData["Messege"] = ex.Message;
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
+            catch(UserIsNullException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
         }
 
         /// <summary>
@@ -82,6 +87,11 @@ namespace Shoppy.Areas.Buy.Controllers
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
             catch(UserIsDeletedException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
+            catch(UserIsNullException ex)
             {
                 TempData["Messege"] = ex.Message;
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
@@ -115,6 +125,11 @@ namespace Shoppy.Areas.Buy.Controllers
                 TempData["Messege"] = ex.Message;
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
+            catch(UserIsNullException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
         }
 
 
@@ -144,6 +159,11 @@ namespace Shoppy.Areas.Buy.Controllers
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
             catch(UserIsDeletedException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
+            catch(UserIsNullException ex)
             {
                 TempData["Messege"] = ex.Message;
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
@@ -238,6 +258,11 @@ namespace Shoppy.Areas.Buy.Controllers
                 TempData["Messege"] = ex.Message;
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
+            catch(UserIsNullException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
         }
 
         /// <summary>
@@ -285,6 +310,11 @@ namespace Shoppy.Areas.Buy.Controllers
                 TempData["Messege"] = ex.Message;
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
+            catch(UserIsNullException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
         }
 
         /// <summary>
@@ -311,6 +341,11 @@ namespace Shoppy.Areas.Buy.Controllers
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
             catch(UserIsDeletedException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
+            catch(UserIsNullException ex)
             {
                 TempData["Messege"] = ex.Message;
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
@@ -354,6 +389,11 @@ namespace Shoppy.Areas.Buy.Controllers
                 TempData["Messege"] = ex.Message;
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
+            catch(UserIsNullException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
         }
 
         /// <summary>
@@ -392,6 +432,11 @@ namespace Shoppy.Areas.Buy.Controllers
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
             catch(UserIsDeletedException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
+            catch(UserIsNullException ex)
             {
                 TempData["Messege"] = ex.Message;
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });

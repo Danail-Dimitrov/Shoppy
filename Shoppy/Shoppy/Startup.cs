@@ -92,51 +92,51 @@ namespace Shoppy
 
             UserManager<User> userManager = services.GetRequiredService<UserManager<User>>();
 
-            CreateRoles(services).Wait();
-            CreateAdminUser(userManager).Wait();
+            //CreateRoles(services).Wait();
+            //CreateAdminUser(userManager).Wait();
             CreateUser(userManager).Wait();
         }
 
-        private async Task CreateRoles(IServiceProvider serviceProvider)
-        {
-            //if changing roles change register.cshtm and register.cshtml.cs
-            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
-            string[] roles = { "Admin", "SuperUser" };
-            IdentityResult roleResult;
+        //private async Task CreateRoles(IServiceProvider serviceProvider)
+        //{
+        //    //if changing roles change register.cshtm and register.cshtml.cs
+        //    var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+        //    string[] roles = { "Admin", "SuperUser" };
+        //    IdentityResult roleResult;
 
-            foreach(var role in roles)
-            {
-                var roleCheck = await RoleManager.RoleExistsAsync(role);
-                if(!roleCheck)
-                {
-                    //here in this line we are creating a role and seed it to the database
-                    roleResult = await RoleManager.CreateAsync(new IdentityRole<int>(role));
-                }
-            }
-        }
+        //    foreach(var role in roles)
+        //    {
+        //        var roleCheck = await RoleManager.RoleExistsAsync(role);
+        //        if(!roleCheck)
+        //        {
+        //            //here in this line we are creating a role and seed it to the database
+        //            roleResult = await RoleManager.CreateAsync(new IdentityRole<int>(role));
+        //        }
+        //    }
+        //}
 
-        private async Task CreateAdminUser(UserManager<User> userManager)
-        {
-            User user = await userManager.FindByEmailAsync(Configuration.GetSection("AdminSettings")["AdminEmail"]);
-            if(user == null)
-            {
-                var adminUser = new User
-                {
-                    UserName = Configuration.GetSection("AdminSettings")["AdminUserName"],
-                    Email = Configuration.GetSection("AdminSettings")["AdminEmail"],
-                    FirstName = Configuration.GetSection("AdminSettings")["AdminFirstName"],
-                    LastName = Configuration.GetSection("AdminSettings")["AdminLastName"],
-                    EmailConfirmed = true,
-                    PhoneNumber = Configuration.GetSection("AdminSettings")["AdminPhoneNumber"],
-                    PhoneNumberConfirmed = true,
-                    IsDeleted = false,
-                    Money = 9999999.99m
-                };
-                var result = await userManager.CreateAsync(adminUser, Configuration.GetSection("AdminSettings")["AdminPassword"]);
+        //private async Task CreateAdminUser(UserManager<User> userManager)
+        //{
+        //    User user = await userManager.FindByEmailAsync(Configuration.GetSection("AdminSettings")["AdminEmail"]);
+        //    if(user == null)
+        //    {
+        //        var adminUser = new User
+        //        {
+        //            UserName = Configuration.GetSection("AdminSettings")["AdminUserName"],
+        //            Email = Configuration.GetSection("AdminSettings")["AdminEmail"],
+        //            FirstName = Configuration.GetSection("AdminSettings")["AdminFirstName"],
+        //            LastName = Configuration.GetSection("AdminSettings")["AdminLastName"],
+        //            EmailConfirmed = true,
+        //            PhoneNumber = Configuration.GetSection("AdminSettings")["AdminPhoneNumber"],
+        //            PhoneNumberConfirmed = true,
+        //            IsDeleted = false,
+        //            Money = 1000m
+        //        };
+        //        var result = await userManager.CreateAsync(adminUser, Configuration.GetSection("AdminSettings")["AdminPassword"]);
 
-                await userManager.AddToRoleAsync(adminUser, "Admin");
-            }
-        }
+        //        await userManager.AddToRoleAsync(adminUser, "Admin");
+        //    }
+        //}
 
         private async Task CreateUser(UserManager<User> userManager)
         {
@@ -153,7 +153,7 @@ namespace Shoppy
                     PhoneNumber = Configuration.GetSection("UserSettings")["UserPhoneNumber"],
                     PhoneNumberConfirmed = true,
                     IsDeleted = false,
-                    Money = 9999999.99m,                    
+                    Money = 1000m
                 };
                 var result = await userManager.CreateAsync(newUser, Configuration.GetSection("UserSettings")["UserPassword"]);
             }

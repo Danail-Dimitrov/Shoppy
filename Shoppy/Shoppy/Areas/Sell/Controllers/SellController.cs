@@ -243,6 +243,11 @@ namespace Shoppy.Areas.Sell.Controllers
                 TempData["Messege"] = ex.Message;
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
+            catch(UserIsNullException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
         }
 
         /// <summary>
@@ -316,6 +321,11 @@ namespace Shoppy.Areas.Sell.Controllers
                 TempData["Messege"] = ex.Message;
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
+            catch(UserIsNullException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
         }
 
         /// <summary>
@@ -372,6 +382,11 @@ namespace Shoppy.Areas.Sell.Controllers
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
             catch(InvalidOperationException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
+            catch(UserIsNullException ex)
             {
                 TempData["Messege"] = ex.Message;
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
@@ -450,6 +465,11 @@ namespace Shoppy.Areas.Sell.Controllers
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
             }
             catch(InvalidOperationException ex)
+            {
+                TempData["Messege"] = ex.Message;
+                return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });
+            }
+            catch(UserIsNullException ex)
             {
                 TempData["Messege"] = ex.Message;
                 return RedirectToAction("GettingDataFromDbError", "Error", new { area = "Error" });

@@ -25,23 +25,30 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductTitle)
-            </td>
-            <td>
-                @(item.IsProvit ? "Yes" : "No")
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MoneyAmaount)
-            </td>
-        </tr>
-}
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductTitle)
+                </td>
+                <td>
+                    @(item.IsProvit ? "Yes" : "No")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MoneyAmaount)
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+<div>
+    <a asp-action="Index">Account Status</a>
+    <br />
+    <a asp-action="AddFunds">Add funds</a>
+</div>
+
 
 <p>Total Profit: @TempData["Profit"]</p>

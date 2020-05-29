@@ -31,10 +31,11 @@ namespace Shoppy.Areas.AccountManagement.Services
         {
             CheckIdIsValid(userId);
             CheckUserIsDeleted(userId);
-
+            if(addFundsDTO.Money <= 0)
+            {
+                throw new ArgumentException("The Amount of money that you add can not be less than or equal to zero");
+            }
             User user = this._dbContext.Users.Find(userId);
-
-            CheckUserIsNotNull(user);
 
             user.Money += addFundsDTO.Money;
             this._dbContext.SaveChanges();
@@ -50,9 +51,7 @@ namespace Shoppy.Areas.AccountManagement.Services
             CheckIdIsValid(userId);
             CheckUserIsDeleted(userId);
 
-            User user = this._dbContext.Users.Find(userId);
-
-            CheckUserIsNotNull(user);
+            User user = this._dbContext.Users.Find(userId);            
 
             AccountInfoDTO accountInfoDTO = new AccountInfoDTO()
             {
@@ -72,7 +71,6 @@ namespace Shoppy.Areas.AccountManagement.Services
             CheckIdIsValid(userId);
             CheckUserIsDeleted(userId);
             User user = this._dbContext.Users.Find(userId);
-            CheckUserIsNotNull(user);
 
             RemoveAllOrders(userId);
 
@@ -92,8 +90,6 @@ namespace Shoppy.Areas.AccountManagement.Services
             CheckIdIsValid(userId);
             CheckUserIsDeleted(userId);
             User user = this._dbContext.Users.Find(userId);
-
-            CheckUserIsNotNull(user);
 
             UserDTO userDTO = new UserDTO(user.UserName, user.FirstName, user.LastName, user.Money, user.SuperUserScore);
 
@@ -191,6 +187,7 @@ namespace Shoppy.Areas.AccountManagement.Services
         /// <exception cref="UserIsDeletedException">UserIsDeletedException is thrown if a user is deleted</exception>
         private void CheckUserIsDeleted(int? userId)
         {
+            CheckUserIsNotNull((int)(userId));
             bool userIsDeleted = this._dbContext.Users.Find(userId).IsDeleted;
             if(userIsDeleted)
             {
@@ -203,8 +200,9 @@ namespace Shoppy.Areas.AccountManagement.Services
         /// </summary>
         /// <param name="user">User that is going to be checked</param>
         /// <exception cref="UserIsNullException">UserIsNullException if the user is null</exception>
-        private void CheckUserIsNotNull(User user)
+        private void CheckUserIsNotNull(int userId)
         {
+            User user = this._dbContext.Users.Find(userId);
             if(user == null)
             {
                 throw new UserIsNullException("User is null");
