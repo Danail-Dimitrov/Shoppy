@@ -208,6 +208,8 @@ namespace Shoppy.Areas.Sell.Services
             CheckUserIsDeleted(userId);
 
             User user = this._dbContext.Users.Find(userId);
+            CheckUserIsNull(user);
+
             user.SuperUserScore += ScoreForAddingOffer;
             this._dbContext.SaveChanges();
         }
@@ -254,7 +256,7 @@ namespace Shoppy.Areas.Sell.Services
 
             if(sellOffer.UserId != userId)
             {
-                throw new ArgumentException("You can not accept offers for SellOffers you do not own");
+                throw new InvalidOperationException("You can not accept offers for SellOffers you do not own");
             }
 
             sellOffer.HasAcceptedBuyOffer = true;
@@ -278,6 +280,9 @@ namespace Shoppy.Areas.Sell.Services
             BuyOffer buyOffer = this._dbContext.BuyOffers.Find(sellOffer.AcceptedBuyOfferId);
             User seller = this._dbContext.Users.Find(currentUserId);
             User buyer = this._dbContext.Users.Find(buyOffer.UserId);
+
+            CheckUserIsNull(seller);
+            CheckUserIsNull(buyer);
 
             decimal moneyOfferd = buyOffer.OfferedMoney;
             if(buyer.Money < moneyOfferd)
@@ -314,7 +319,7 @@ namespace Shoppy.Areas.Sell.Services
             SellOffer sellOffer = this._dbContext.SellOffers.Find(sellOferId);
             if(sellOffer.UserId != userId)
             {
-                throw new ArgumentException("You can not unaccept offers for SellOffers you do not own");
+                throw new InvalidOperationException("You can not unaccept offers for SellOffers you do not own");
             }
 
             sellOffer.HasAcceptedBuyOffer = false;
@@ -383,7 +388,9 @@ namespace Shoppy.Areas.Sell.Services
         /// <exception cref="UserIsDeletedException">UserIsDeletedException is thrown if the user is deleted</exception>
         private void CheckUserIsDeleted(int? userId)
         {
-            bool userIsDeleted = this._dbContext.Users.Find(userId).IsDeleted;
+            User user = this._dbContext.Users.Find(userId);
+            CheckUserIsNull(user);
+            bool userIsDeleted = user.IsDeleted;
             if(userIsDeleted)
             {
                 throw new UserIsDeletedException("The user is deleted");
@@ -428,6 +435,19 @@ namespace Shoppy.Areas.Sell.Services
         private bool CheckIfUserIsSupper(User user)
         {
             return user.SuperUserScore >= SupperUserMinScore;
+        }
+
+        /// <summary>
+        /// Checks if a given user is null. If he is Exceprio is thrown.
+        /// </summary>
+        /// <param name="user">The user that needs to be checked</param>
+        /// <exception cref="UserIsNullException">UserIsNullException is trown if the user is null</exception>
+        private void CheckUserIsNull(User user)
+        {
+            if(user == null)
+            {
+                throw new UserIsNullException("The user is null");
+            }
         }
     }
 }

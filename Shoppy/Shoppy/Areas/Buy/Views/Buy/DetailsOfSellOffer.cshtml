@@ -34,7 +34,7 @@
             @Html.DisplayFor(model => model.TotalPrice)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PriceIsNegotiable)
+            @Html.DisplayNameFor(model => model.PriceIsNegotiable) 
         </dt>
         <dd class="col-sm-10">
             @(Model.PriceIsNegotiable ? "Yes" : "No")
@@ -48,6 +48,7 @@
     </dl>
 </div>
 <div>
-    <a asp-action="ShowRandomOffers">Show SellOffers</a> <br/>
+    <a asp-action="Create" asp-route-id="@Model.Id">Make a buy Offer</a>
+    </br>
     <a asp-action="Index">Your Buy Offers</a>
 </div>

@@ -62,7 +62,9 @@ namespace Shoppy.Models.DTO
         [Range(1, 99, ErrorMessage = "The quantity of a product must be betwen 1 and 99")]
         public int Quantity { get; set; }
         public string TagsStr { get; set; }
+        [Display(Name = "Has Accepted BuyOffer")]
         public bool HasAcceptedBuyOffer { get; set; }
         public List<string> Tags { get; set; }
+        public int AcceptedBuyOfferId { get; set; }
     }
 }

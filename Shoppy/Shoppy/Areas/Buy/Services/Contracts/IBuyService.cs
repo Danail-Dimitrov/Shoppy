@@ -32,5 +32,6 @@ namespace Shoppy.Areas.Buy.Services.Contracts
         void DeleteBuyOffer(int? id, int? userId);
 
         List<SellOfferDTO> GetSellOffersByName(GetSellOfferByNameDTO getSellOfferByNameDTO, int userId);
+        bool GetIsThePriceNegotiable(int? sellOfferId);
     }
 }

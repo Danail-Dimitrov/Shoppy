@@ -17,5 +17,7 @@ namespace Shoppy.Areas.Buy.Models.DTO
         public decimal MoneyOffered { get; set; }
         [Display(Name = "Asked Money")]
         public decimal AskedMoney { get; set; }
+        [Display(Name = "Is the Price Negotiable")]
+        public bool IsThePriceNegotiable { get; set; }
     }
 }

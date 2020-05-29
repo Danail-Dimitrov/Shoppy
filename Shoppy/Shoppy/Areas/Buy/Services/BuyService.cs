@@ -29,7 +29,7 @@ namespace Shoppy.Areas.Buy.Services
         /// Gets userId and calls methods validates it, gets all the BuyOffers the user has, converts them to DTOs and returns them.
         /// </summary>
         /// <param name="userId">The id of the user whoes BuyOffers need to be returned</param>
-        /// <returns>List of BuyOfferWithTitelDTO that contains all buy offers the given user has</returns>
+        /// <returns>List of BuyOfferDTO that contains all buy offers the given user has</returns>
         public List<BuyOfferWithTitelDTO> GetBuyOffersFromUser(int? userId)
         {
             CheckIdIsValid(userId);
@@ -150,6 +150,7 @@ namespace Shoppy.Areas.Buy.Services
             CheckIdIsValid(userId);
             CheckUserIsDeleted(userId);
             User user = this._dbContext.Users.Find(userId);
+            CheckUserIsNull(user);
             user.SuperUserScore += ScoreForAddingBuyOffer;
             this._dbContext.SaveChanges();
         }
@@ -212,10 +213,10 @@ namespace Shoppy.Areas.Buy.Services
         }
 
         /// <summary>
-        /// Gets BuyOffer in form of BuyOfferWithTitelDTO. Gets the id of the BuyOffer that needs to be returned, validates it, checks if the user who owns it is deleted than converts the BuyOffer to DTO and returns it.
+        /// Gets BuyOffer in form of BuyOfferDTO. Gets the id of the BuyOffer that needs to be returned, validates it, checks if the user who owns it is deleted than converts the BuyOffer to DTO and returns it.
         /// </summary>
         /// <param name="id">Id of the BuyOffer that needs to be returned</param>
-        /// <returns>BuyOfferWithTitelDTO that has the data for the given BuyOffer</returns>
+        /// <returns>BuyOfferDTO that has the data for the given BuyOffer</returns>
         public BuyOfferWithTitelDTO GetBuyOfferWithTitelByIndex(int? id)
         {
             CheckIdIsValid(id);
@@ -225,9 +226,9 @@ namespace Shoppy.Areas.Buy.Services
             CheckUserIsDeleted(buyOffer.UserId);
 
             string priductTitel = this._dbContext.SellOffers.Find(buyOffer.SellOfferId).ProductTitle;
-            BuyOfferWithTitelDTO buyOfferWithTitelDTO = new BuyOfferWithTitelDTO(buyOffer.Id, buyOffer.OfferedMoney, buyOffer.SellOfferId, priductTitel);
+            BuyOfferWithTitelDTO BuyOfferDTO = new BuyOfferWithTitelDTO(buyOffer.Id, buyOffer.OfferedMoney, buyOffer.SellOfferId, priductTitel);
 
-            return buyOfferWithTitelDTO;
+            return BuyOfferDTO;
         }
 
         /// <summary>
@@ -283,16 +284,27 @@ namespace Shoppy.Areas.Buy.Services
         }
 
         /// <summary>
-        /// Converts a BuyOffer to BuyOfferWithTitelDTO
+        /// Checks if the id of the SellOffer is valid and returns a boolean telling us if the price of a SellOffer is negotiale
+        /// </summary>
+        /// <param name="sellOfferId">Id of the SellOffer about which we are getting the information</param>
+        /// <returns>Boolean showing if the price of the SellOffer is negotiable</returns>
+        public bool GetIsThePriceNegotiable(int? sellOfferId)
+        {
+            CheckIdIsValid(sellOfferId);
+            return this._dbContext.SellOffers.Find(sellOfferId).PriceIsNegotiable;
+        }
+
+        /// <summary>
+        /// Converts a BuyOffer to BuyOfferDTO
         /// </summary>
         /// <param name="buyOffer">The BuyOffer that needs to be converted</param>
         /// <param name="productTitle">The product title </param>
-        /// <returns>BuyOfferWithTitelDTO with the information from the BuyOffer</returns>
+        /// <returns>BuyOfferDTO with the information from the BuyOffer</returns>
         private BuyOfferWithTitelDTO ConvertBuyOfferToDTO(BuyOffer buyOffer, string productTitle)
         {
-            BuyOfferWithTitelDTO buyOfferWithTitelDTO = new BuyOfferWithTitelDTO(buyOffer.Id, buyOffer.OfferedMoney, buyOffer.SellOfferId, productTitle);
+            BuyOfferWithTitelDTO BuyOfferDTO = new BuyOfferWithTitelDTO(buyOffer.Id, buyOffer.OfferedMoney, buyOffer.SellOfferId, productTitle);
 
-            return buyOfferWithTitelDTO;
+            return BuyOfferDTO;
         }
 
         /// <summary>
@@ -333,7 +345,7 @@ namespace Shoppy.Areas.Buy.Services
             }
             if(id <= 0)
             {
-                throw new ArgumentException("User id can not be less than zero");
+                throw new ArgumentException("User id can not be less than or equal zero");
             }
         }
 
@@ -366,14 +378,15 @@ namespace Shoppy.Areas.Buy.Services
         /// <exception cref="UserIsDeletedException">UserIsDeletedException is thrown if a user is deleted</exception>
         private void CheckUserIsDeleted(int? userId)
         {
-            bool userIsDeleted = this._dbContext.Users.Find(userId).IsDeleted;
+            User user = this._dbContext.Users.Find(userId);
+            CheckUserIsNull(user);
+            bool userIsDeleted = user.IsDeleted;
             if(userIsDeleted)
             {
                 throw new UserIsDeletedException("The user is deleted");
             }
         }
 
-        //TO DO: Test
         /// <summary>
         /// Gets Buyoffer unaccepted, if it has been accepted, after it is deleted. Gets the BuyOffer, checks if it has been accepted. If it is it gets unaccepted.
         /// </summary>
@@ -387,6 +400,19 @@ namespace Shoppy.Areas.Buy.Services
                 sellOffer.AcceptedBuyOfferId = 0;
                 sellOffer.HasAcceptedBuyOffer = false;
                 this._dbContext.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Checks if a given user is null. If he is Exceprio is thrown.
+        /// </summary>
+        /// <param name="user">The user that needs to be checked</param>
+        /// <exception cref="UserIsNullException">UserIsNullException is trown if the user is null</exception>
+        private void CheckUserIsNull(User user)
+        {
+            if(user == null)
+            {
+                throw new UserIsNullException("The user is null");
             }
         }
     }
